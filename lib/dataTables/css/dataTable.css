@@ -1,0 +1,106 @@
+.sortable_table {
+	width: 100%;
+	clear:both;
+	border-collapse:collapse;
+	font-size: 13px;
+}
+.dataTables_length {
+	float: left;
+}
+.dataTables_filter {
+	float: right;
+}
+.dataTables_top {
+	height: 21px;
+	padding: 5px 0px;
+	font-size: 11px;
+}
+.dataTables_bottom {
+	border: 1px solid #bbb;
+	height: 18px;
+	padding: 7px 10px 1px 10px;
+	font-size: 11px;
+	background-color: #ccc;
+	font-weight: bold;
+	color: #222;
+	-moz-border-radius-bottomleft: 		3px;
+	-moz-border-radius-bottomright:  	3px;
+	-webkit-border-bottom-left-radius: 	3px;
+	-webkit-border-bottom-right-radius: 3px;
+}
+.dataTables_info {
+	width: 50%;
+	float: left;
+}
+.dataTables_paginate {
+	width: 50%;
+	float: right;
+	text-align: right;
+}
+.paginate_button {
+	padding: 2px 6px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	background-color: #F0F0F0;
+	border: 1px solid #F0F0F0;
+	margin-right: 4px;
+	cursor: pointer;
+	font-weight: 100;
+}
+.paginate_active {
+	padding: 2px 6px;
+	margin-right: 2px;
+	font-weight: bold;
+}
+.dataTables_paginate div {
+	border: 1px solid blue;
+	width: 10px;
+	height: 10px;
+	float: left;
+}
+.sortable_table thead th {
+	cursor: pointer;
+	padding: 6px 15px 6px 12px;
+	background-color: #e8e8e8;
+	color: #555;
+	/* border:1px solid #D3D3D3; */
+	text-align: left;
+	background-repeat: no-repeat;
+	background-position: right;
+	border-bottom: 1px solid #999;
+	border-right: 1px solid #ddd;
+}
+.sortable_table .td_last {
+	border-right: none;
+}
+.sortable_table th.sorting {
+	background-image:url("../images/sort_both.png");
+	background-repeat: no-repeat;
+	background-position: right;
+}
+.sortable_table th.sorting_asc {
+	background-image: url('../images/sort_asc.png');
+}
+.sortable_table th.sorting_desc {
+	background-image: url('../images/sort_desc.png');
+}
+.sortable_table tbody td {
+	padding: 8px 12px;
+	border-bottom: 1px solid #dddddd;
+	border-right: 1px solid #f0f0f0;
+}
+.sortable_table tr.even {
+	background-color: #FBFBFB;
+}
+.paginate_disabled {
+	background-color: none;
+	padding: 2px 6px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	background-color: #dfdfdf;
+	border: 1px solid #dfdfdf;
+	color: #777;
+	margin-right: 4px;
+	cursor: pointer;
+	font-weight: 100;
+}

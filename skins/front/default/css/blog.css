@@ -1,0 +1,26 @@
+
+
+.blog_post_first,
+.blog_post + .blog_post {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #666;
+}
+
+.blog_date {
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+
+.blog_name {
+    margin-bottom: 10px;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.blog_content {
+    margin-bottom: 10px;
+}
+
+.blog_link {}
+
