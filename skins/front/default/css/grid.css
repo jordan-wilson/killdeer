@@ -1,0 +1,42 @@
+
+
+/****** GRID SYSTEM ******/
+.row {
+    width: 100%;
+    margin-left: 0%;
+    margin-bottom: 2%; /* 20px */
+}
+.row:after { clear: both; }
+.row:before, .row:after { display: table; content: ""; }
+
+.span1, .span2, .span3, .span4, .span5, .span6, .span7, .span8, .span9, .span10, .span11, .span12 {
+    float: left;
+    margin-left: 2%; /* 20px */
+    background-color: #f0f0f0;
+}
+
+.row .row div[class*="span"] {
+    background-color: #e0e0e0;
+}
+.row .row .row div[class*="span"] {
+    background-color: #d0d0d0;
+}
+
+.span1:first-child, .span2:first-child, .span3:first-child, .span4:first-child { margin-left: 0%; }
+.span5:first-child, .span6:first-child, .span7:first-child, .span8:first-child { margin-left: 0%; }
+.span9:first-child, .span10:first-child, .span11:first-child, .span12:first-child { margin-left: 0%; }
+
+.span1  { width: 6.4236111111111%; }
+.span2  { width: 14.930555555556%; }
+.span3  { width: 23.4375%; }
+.span4  { width: 31.944444444444%; }
+.span5  { width: 40.451388888889%; }
+.span6  { width: 48.958333333333%; }
+.span7  { width: 57.465277777778%; }
+.span8  { width: 65.972222222222%; }
+.span9  { width: 74.479166666667%; }
+.span10 { width: 82.986111111111%; }
+.span11 { width: 91.493055555556%; }
+.span12 { width: 100%; }
+
+

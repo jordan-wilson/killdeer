@@ -2,8 +2,8 @@
     <div class="row">
         
         <div class="span8">
-            <h1><?= $header; ?></h1>
-            <p><?= $content; ?></p>
+            <h1><?= $registry->page_heading; ?></h1>
+            <?= $content; ?>
             <?php /*echo '<pre>' . print_r(get_defined_vars(), true) . '</pre>';*/ ?> 
             <?php if ( count($blogs) ) : ?>
             

@@ -3,45 +3,51 @@
 class blog extends controller 
 {
     
-    public function index( $data = array(), $caller = null )
+    public function index( $data = array() )
     {
         $request = $this->registry->request_args;
+        $this->page_controller = _load_class('page');
         
-        if ( count($request) == 1 )
+        // blog landing page
+        if (count($request) == 1)
         {
-            $this->landing( $data, $caller );
+            $this->landing($data);
+            return;
         }
-        else if ( count($request) == 2 )
+        // blog post
+        else if (count($request) == 2)
         {
-            $this->view( $request[1], $data, $caller );
+            $this->view($request[1], $data);
+            return;
         }
-        else if ( $caller )
+        
+        // show error page
+        if ($this->page_controller)
         {
-            if (method_exists($caller, 'error_page'))
+            if (method_exists($this->page_controller, 'error_page'))
             {
-                $caller->error_page();
+                $this->page_controller->error_page();
             }
         }
-        
+       
     }
     
     
-    private function css()
+    private function add_css()
     {
-        // add styles
-        $css = '/skins/' . APP . '/' . DEFAULT_SKIN . '/css/blog.css';
+        $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/blog.css';
         $this->registry->add_css_by_url($css);
     }
     
     
-    private function landing( $data = array()  )
+    private function landing( $data = array() )
     {
         // get recent blogs
         $blog_model = load_model('blog');
         $data['blogs'] = $blog_model->get_landing();
         
         // add css
-        $this->css();
+        $this->add_css();
         
         // display blog landing page
         echo load_view('header.template.php');
@@ -50,33 +56,32 @@ class blog extends controller
     }
     
     
-    private function view( $url = '', $data = array(), $caller = null  )
+    private function view( $url = '', $data = array()  )
     {
         // get blog info
         $blog_model = load_model('blog');
-        $data['blog'] = $blog_model->get_view( $url );
+        $data['blog'] = $blog_model->get_view($url);
         
         // blog not found
-        if ( ! $data['blog'] && $caller )
+        if ( ! $data['blog'] && $this->page_controller)
         {
-            if (method_exists($caller, 'error_page'))
+            if (method_exists($this->page_controller, 'error_page'))
             {
-                $caller->error_page();
-                return;
+                $this->page_controller->error_page();
             }
         }
         
         // update meta
-        if ( $caller )
+        if ($this->page_controller)
         {
-            if (method_exists($caller, 'update_meta'))
+            if (method_exists($this->page_controller, 'update_meta'))
             {
-                $data['blog'] = $caller->update_meta($data['blog']);
+                $this->page_controller->update_meta($data['blog']);
             }
         }
         
         // add css
-        $this->css();
+        $this->add_css();
         
         // display blog post
         echo load_view('header.template.php');

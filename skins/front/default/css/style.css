@@ -5,7 +5,7 @@ html, body {
 	height: 100%;
 }
 body {
-	margin: 0;
+    margin: 0;
 	padding: 0;
 	color: #292929;
 	font-size: 13px;
@@ -67,7 +67,8 @@ h6, .h6 {
 /****** CONTAINER ******/
 #container {
 	width: 1000px;
-	margin: 20px auto;
+	margin: 0px auto;
+    padding: 20px 0;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -112,41 +113,6 @@ h6, .h6 {
     margin: 1px 20px;
     padding: 20px 0;
 }
-
-
-
-
-/****** GRID SYSTEM ******/
-.row {
-    width: 100%;
-    margin-left: 0%;
-    margin-bottom: 2%; /* 20px */
-}
-.row:after { clear: both; }
-.row:before, .row:after { display: table; content: ""; }
-
-.span1, .span2, .span3, .span4, .span5, .span6, .span7, .span8, .span9, .span10, .span11, .span12 {
-    float: left;
-    margin-left: 2%; /* 20px */
-    background-color: #f0f0f0;
-}
-
-.span1:first-child, .span2:first-child, .span3:first-child, .span4:first-child { margin-left: 0%; }
-.span5:first-child, .span6:first-child, .span7:first-child, .span8:first-child { margin-left: 0%; }
-.span9:first-child, .span10:first-child, .span11:first-child, .span12:first-child { margin-left: 0%; }
-
-.span1  { width: 6.4236111111111%; }
-.span2  { width: 14.930555555556%; }
-.span3  { width: 23.4375%; }
-.span4  { width: 31.944444444444%; }
-.span5  { width: 40.451388888889%; }
-.span6  { width: 48.958333333333%; }
-.span7  { width: 57.465277777778%; }
-.span8  { width: 65.972222222222%; }
-.span9  { width: 74.479166666667%; }
-.span10 { width: 82.986111111111%; }
-.span11 { width: 91.493055555556%; }
-.span12 { width: 100%; }
 
 
 

@@ -2,10 +2,9 @@
     <div class="row">
         
         <div class="span8">
-            <h1><?= $header; ?></h1>
-            <p><?= $content; ?></p>
-            <p><?= dirname(__FILE__); ?></p>
-            <?php /*'<pre>' . print_r(get_defined_vars(), true) . '</pre>';*/ ?> 
+            <h1><?= $registry->page_heading; ?></h1>
+            <?= $content; ?>
+            <?php /*echo '<pre>' . print_r(get_defined_vars(), true) . '</pre>';*/ ?> 
         </div>
         
         <div class="span4">

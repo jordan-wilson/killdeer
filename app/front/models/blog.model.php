@@ -45,8 +45,8 @@ class blog_model extends model
             'date' => strtotime('January 2, 2012'),
             'name' => 'Blog 1',
             'content' => '<p>Ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Donec id elit non mi porta gravida at eget metus.</p>',
-            'header' => '',
-            'meta_title' => 'Blog 1',
+            'page_heading' => 'Blog > Blog 1',
+            'meta_title' => 'Blog :: Blog 1',
             'meta_keywords' => '',
             'meta_description' => ''
         );
@@ -56,7 +56,7 @@ class blog_model extends model
             'date' => strtotime('January 14, 2012'),
             'name' => 'Blog 2',
             'content' => '<p>Donec id elit non mi porta gravida at eget metus. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>',
-            'header' => '',
+            'page_heading' => '',
             'meta_title' => 'Blog 2',
             'meta_keywords' => '',
             'meta_description' => ''
@@ -67,7 +67,7 @@ class blog_model extends model
             'date' => strtotime('January 20, 2012'),
             'name' => 'Blog 3',
             'content' => '<p>Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>',
-            'header' => '',
+            'page_heading' => '',
             'meta_title' => 'Blog 3',
             'meta_keywords' => '',
             'meta_description' => ''
@@ -78,7 +78,7 @@ class blog_model extends model
             'date' => strtotime('January 26, 2012'),
             'name' => 'Blog 4',
             'content' => '<p>Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>',
-            'header' => '',
+            'page_heading' => 'Blog > Blog 4',
             'meta_title' => 'Blog 4',
             'meta_keywords' => '',
             'meta_description' => ''
@@ -86,9 +86,8 @@ class blog_model extends model
         
         if ( $arr[$id] )
             return $arr[$id];
-        else
-            return false;
         
+        return false;
     }
 
 }

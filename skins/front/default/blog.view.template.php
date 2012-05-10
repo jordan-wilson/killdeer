@@ -2,7 +2,7 @@
     <div class="row">
         
         <div class="span8">
-            <h1><?= $header; ?></h1>
+            <h1><?= $registry->page_heading; ?></h1>
             
             <?php if ( count($blog) ) : ?>
                 

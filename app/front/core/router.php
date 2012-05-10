@@ -19,7 +19,6 @@ class router
     {
         $input = load_core('input');
         
-        
         // always uses default controller
         $this->registry->controller = DEFAULT_CONTROLLER;
         $this->registry->action = 'index';
@@ -34,20 +33,8 @@ class router
             }
         }
         $this->registry->request_args = $_args;
-        
     }
     
-    private function _init_meta()
-    {
-        $title = ucwords(str_replace('_', ' ', $this->registry->controller));
-        if ($this->registry->action != 'index')
-        {
-            $title .= ucwords(str_replace('_', ' ', $this->registry->action));
-        }
-        $this->registry->meta_title = $title;
-        $this->registry->meta_keywords = '';
-        $this->registry->meta_description = '';
-    }
     
     public function route()
     {

@@ -16,31 +16,42 @@ class page extends controller
         
         // if page not found
         if ( ! count($data))
-        {
            $this->error_page();
-           return;
-        }
         
         
         // update page meta
-        $data = $this->update_meta($data);
+        $this->update_meta($data);
         
         
         // if page is using a module
-        if ( trim($data['module']) )
+        if (trim($data['module']))
         {
-            $controller = load_controller($data['module']);
-            if ($controller)
+            $module = load_controller($data['module']);
+            if ($module)
             {
-                if (method_exists($controller, 'index'))
+                if (method_exists($module, 'index'))
                 {
-                    $controller->index($data, $this);
+                    $module->index($data);
                     return;
                 }
             }
         }
-
-
+        
+        
+        // if page has a form attached
+        if (trim($data['form_id']))
+        {
+            $forms = load_controller('forms');
+            if ($forms)
+            {
+                if (method_exists($forms, 'index'))
+                {
+                    $data = $forms->index($data);
+                }
+            }
+        }
+        
+        
         // display default page view
         echo load_view('header.template.php');
         echo load_view('page.index.template.php', $data);
@@ -52,7 +63,12 @@ class page extends controller
     public function update_meta( $data )
     {
         if (trim($data['meta_title']))
+        {
             $this->registry->meta_title = $data['meta_title'];
+            
+            if ( ! $this->registry->page_heading)
+                $this->registry->page_heading = $data['meta_title'];
+        }
 
         if (trim($data['meta_keywords']))
             $this->registry->meta_keywords = $data['meta_keywords'];
@@ -60,10 +76,9 @@ class page extends controller
         if (trim($data['meta_description']))
             $this->registry->meta_description = $data['meta_description'];
         
-        if ( ! trim($data['header']))
-            $data['header'] = $data['meta_title'];
+        if (trim($data['page_heading']))
+            $this->registry->page_heading = $data['page_heading'];
         
-        return $data;
     }
     
     
@@ -73,17 +88,21 @@ class page extends controller
         // get error page info
         $page_model = load_model('page');
         $data = $page_model->get_page('error');
+        
+        // if error page not found
         if ( ! count($data))
             error_page();
         
         // update page meta
-        $data = $this->update_meta($data);
+        $this->update_meta($data);
         
         // display error page
         header('HTTP/1.1 404 Not Found');
         echo load_view('header.template.php');
         echo load_view('page.index.template.php', $data);
         echo load_view('footer.template.php');
+        exit();
     }
+    
     
 }
