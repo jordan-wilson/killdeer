@@ -7,8 +7,8 @@
         <meta name="description" content="<?= $registry->meta_description; ?>">
         
         <?= (count($registry->css) ? join("\n", $registry->css) : ''); ?> 
-        <link rel="stylesheet" media="all" href="/skins/front/default/css/grid.css" /> 
-        <link rel="stylesheet" media="all" href="/skins/front/default/css/style.css" /> 
+        <link rel="stylesheet" href="/skins/front/default/css/grid.css" media="all" /> 
+        <link rel="stylesheet" href="/skins/front/default/css/style.css" media="all" /> 
     </head>
     <body>
     

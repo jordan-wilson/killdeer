@@ -32,7 +32,7 @@ class page extends controller
                 if (method_exists($module, 'index'))
                 {
                     $module->index($data);
-                    return;
+                    //return;
                 }
             }
         }
@@ -52,10 +52,12 @@ class page extends controller
         }
         
         
-        // display default page view
-        echo load_view('header.template.php');
-        echo load_view('page.index.template.php', $data);
-        echo load_view('footer.template.php');
+        // load default page view
+        if ( ! $this->content)
+            $this->content = load_view('page.index.template.php', $data);
+        
+        // display main template
+        $this->display();
     }
     
     
@@ -98,9 +100,8 @@ class page extends controller
         
         // display error page
         header('HTTP/1.1 404 Not Found');
-        echo load_view('header.template.php');
-        echo load_view('page.index.template.php', $data);
-        echo load_view('footer.template.php');
+        $this->content = load_view('page.index.template.php', $data);
+        $this->display();
         exit();
     }
     

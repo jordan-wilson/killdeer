@@ -7,7 +7,7 @@ class forms extends controller
     {
         $request = $this->registry->request_args;
         if ( ! count($request))
-            return false;
+            return $data;
         
         $url = $request[0];
         $action = count($request) > 1 ? array_pop($request) : false;
@@ -24,8 +24,8 @@ class forms extends controller
         }
         
         
-        // display the form
-        $data['content'] .= $this->display($data['form_id'], $url);
+        // create the form
+        $data['content'] .= $this->create($data['form_id'], $url);
         return $data;
     }
     
@@ -36,7 +36,7 @@ class forms extends controller
     }
     
     
-    public function display( $id = 0, $url = '' )
+    public function create( $id = 0, $url = '' )
     {
         // get form
         $forms_model = load_model('forms');

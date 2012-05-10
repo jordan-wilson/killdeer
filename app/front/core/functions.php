@@ -22,37 +22,3 @@ if ( ! function_exists('load_core'))
     }
 }
 
-
-//
-// LOAD CLASS INTO SYSTEM
-//
-if ( ! function_exists('_load_class'))
-{
-    function _load_class($class_name, $path = null)
-    {
-        static $_classes = array();
-        
-        // IF THE CLASS IS ALREADY LOADED, RETURN IT
-        if (isset($_classes[$class_name]))
-        {
-            return $_classes[$class_name];
-        }
-        
-        // OR LOAD AND SAVE
-        if ($path)
-        {
-            if (file_exists($path))
-            {
-                include($path);
-                $class = new $class_name();
-                $_classes[$class_name] = $class;
-                is_loaded($class_name);
-                return $class;
-            }
-        }
-        
-        // CLASS FILE DOESN'T EXIST
-        return FALSE;
-    }
-}
-
