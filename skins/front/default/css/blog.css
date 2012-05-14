@@ -1,10 +1,7 @@
 
 
-.blog_post_first,
-.blog_post + .blog_post {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #666;
+.blog_post {
+    margin-bottom: 20px;
 }
 
 .blog_date {
@@ -12,11 +9,8 @@
     font-size: 1.1em;
 }
 
-.blog_name {
-    margin-bottom: 10px;
-    font-size: 1.4em;
-    font-weight: bold;
-}
+.blog_name {}
+.blog_name h2 {}
 
 .blog_content {
     margin-bottom: 10px;

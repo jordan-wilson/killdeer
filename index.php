@@ -10,7 +10,7 @@ define('URL_BASE', '/');
 define('DEFAULT_CONTROLLER', 'page');
 define('DEFAULT_SKIN', 'default');
 define('ERROR_CONTROLLER', 'error');
-define('DEFAULT_MAIN_TEMPLATE', 'main.template.php');
+define('DEFAULT_MAIN_TEMPLATE', 'layout.main.template.php');
 
 // LOAD APP FUNCTIONS & OVERRIDES
 $path = SITE_ROOT . '/app/' . APP . '/core/functions.php';

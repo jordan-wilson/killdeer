@@ -3,6 +3,8 @@
 class page extends controller 
 {
     
+    public $data = array();
+    
     public function index()
     {
         // get page url
@@ -11,27 +13,27 @@ class page extends controller
         
         // get page info
         $page_model = load_model('page');
-        $data = $page_model->get_page($url);
+        $this->data = $page_model->get_page($url);
         
         
         // if page not found
-        if ( ! count($data))
+        if ( ! count($this->data))
            $this->error_page();
         
         
         // update page meta
-        $this->update_meta($data);
+        $this->update_meta($this->data);
         
         
         // if page is using a module
-        if (trim($data['module']))
+        if (trim($this->data['module']))
         {
-            $module = load_controller($data['module']);
+            $module = load_controller($this->data['module']);
             if ($module)
             {
                 if (method_exists($module, 'index'))
                 {
-                    $module->index($data);
+                    $module->index($this->data);
                     //return;
                 }
             }
@@ -39,22 +41,29 @@ class page extends controller
         
         
         // if page has a form attached
-        if (trim($data['form_id']))
+        /*
+        if (trim($this->data['form_id']))
         {
             $forms = load_controller('forms');
             if ($forms)
             {
                 if (method_exists($forms, 'index'))
                 {
-                    $data = $forms->index($data);
+                    $this->data = $forms->index($this->data);
                 }
             }
         }
+        */
         
         
         // load default page view
         if ( ! $this->content)
-            $this->content = load_view('page.index.template.php', $data);
+            $this->content = load_view('page.index.template.php', $this->data);
+        
+        
+        // update layout blocks
+        $this->process_layouts();
+        
         
         // display main template
         $this->display();
@@ -62,24 +71,16 @@ class page extends controller
     
     
     // update meta tags
-    public function update_meta( $data )
+    public function update_meta( $data = array() )
     {
         if (trim($data['meta_title']))
-        {
             $this->registry->meta_title = $data['meta_title'];
-            
-            if ( ! $this->registry->page_heading)
-                $this->registry->page_heading = $data['meta_title'];
-        }
 
         if (trim($data['meta_keywords']))
             $this->registry->meta_keywords = $data['meta_keywords'];
 
         if (trim($data['meta_description']))
             $this->registry->meta_description = $data['meta_description'];
-        
-        if (trim($data['page_heading']))
-            $this->registry->page_heading = $data['page_heading'];
         
     }
     
@@ -105,5 +106,57 @@ class page extends controller
         exit();
     }
     
+    
+    public function process_layouts()
+    {
+        $layout = $this->data['layout'];
+        
+        // load layout
+        if (count($layout))
+        {
+            // load layout template
+            $template = $layout['template'];
+            $path = SITE_ROOT . '/skins/' . APP . '/' . $this->registry->skin . '/' . $template;
+            if (file_exists($path))
+                $this->main_template = $template;
+            
+            // replace modular blocks with actual content
+            foreach($layout['cells'] as $i => $cell)
+            {
+                foreach($cell as $j => $block)
+                {
+                    
+                    // if page content
+                    if ($block == '[content]')
+                    {
+                        $layout['cells'][$i][$j] = $this->content;
+                    }
+                    
+                    // else, try and look for modular content
+                    else
+                    {
+                        // IF   $block   = '[forms:1]'
+                        // THEN $matches = array('[forms:1]', 'forms', '1')
+                        $matches = array();
+                        preg_match('/^\[(.*):(.*)\]$/', $block, $matches);
+                        if (count($matches) == 3)
+                        {
+                            $controller = load_controller($matches[1]);
+                            if ($controller)
+                            {
+                                if (method_exists($controller, 'get_block'))
+                                {
+                                    $layout['cells'][$i][$j] = $controller->get_block($matches[2]);
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        }
+        
+        $this->layout = $layout;
+    }
     
 }

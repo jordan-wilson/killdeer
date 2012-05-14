@@ -1,23 +1,27 @@
 
 
-/* form fields */
-.control-group {
-    margin-bottom: 18px;
+.form_submitted {
+    padding: 10px;
+    background-color: #e3e3cf;
 }
-.control-group:after { clear: both; }
-.control-group:before { display: table; content: ""; }
-.control-group:after { display: table; content: ""; }
+
+
+/* form fields */
+.input_container {
+    margin-bottom: 9px;
+}
+.form_horizontal .input_container {
+    margin-bottom: 9px;
+}
+.form_horizontal .input_container:after { clear: both; }
+.form_horizontal .input_container:before { display: table; content: ""; }
+.form_horizontal .input_container:after { display: table; content: ""; }
+
+
 
 
 
 /* form labels */
-.control-label {
-    float: left;
-    width: 140px;
-    padding-top: 5px;
-    text-align: right;
-}
-
 label {
     display: block;
     margin-bottom: 5px;
@@ -27,17 +31,31 @@ label {
     line-height: 18px;
 }
 
+.form_horizontal .form_label {
+    float: left;
+    width: 140px;
+    padding-top: 5px;
+    text-align: right;
+}
+
 
 
 /* form inputs */
-.controls {
+.form_horizontal  .form_field {
     margin-left: 160px;
 }
 
+.form_error {
+    margin-top: 5px;
+    padding: 5px 10px;
+    color: #870217;
+    background-color: #ffe3e3;
+}
+
 input, textarea, select {
-    display: inline-block;
+    display: block;
     padding: 4px;
-    margin-bottom: 0px;
+    margin-bottom: 9px;
     color: #555;
     font-size: 13px;
     line-height: 18px;
@@ -47,6 +65,10 @@ input, textarea, select {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
+.form_horizontal input, .form_horizontal textarea, .form_horizontal select {
+    margin-bottom: 0px;
+}
+
 input {
     width: 99%;
 }
@@ -61,7 +83,7 @@ select {
 
 
 /* form buttons */
-.form-actions {
+.form_horizontal .form_actions {
     margin-left: 160px;
     margin-bottom: 18px;
 }
