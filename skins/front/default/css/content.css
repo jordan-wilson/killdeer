@@ -1,0 +1,93 @@
+
+
+/****** BASICS ******/
+body {
+	color: #292929;
+	font-size: 13px;
+	line-height: 1.3;
+	font-family: Arial, sans-serif;
+}
+
+a {
+	color: #0066cc;
+	cursor: pointer;
+	text-decoration: none;
+}
+a:visited {
+	color: #0066cc;
+}
+a:hover {
+	color: #0066cc;
+	text-decoration: none;
+}
+
+p, h1, h2, h3, h4, h5, h6, ul, ol, table {
+	margin: 0 0 1em 0;
+}
+
+h1, .h1 {
+	margin-bottom: 0.5em;
+	font-size: 1.61538em; /* 21px / 13px */
+	font-weight: bold;
+}
+h2, .h2 {
+	margin-bottom: 0.5em;
+	font-size: 1.53846em; /* 20px / 13px */
+	font-weight: bold;
+}
+h3, .h3 {
+	margin-bottom: 0.5em;
+	font-size: 1.15385em; /* 15px / 13px */
+	font-weight: bold;
+}
+h4, .h4 {
+	font-size: 1em; /* 13px / 13px */
+	font-weight: bold;
+}
+h5, .h5 {
+	margin-bottom: 0;
+	font-size: 0.92308em; /* 12px / 13px */
+	font-weight: bold;
+}
+h6, .h6 {
+	margin-bottom: 0.5em;
+	color: #917122;
+	font-size: 0.76923em; /* 10px / 13px */
+}
+
+
+.page_content {
+    margin-bottom: 20px;
+}
+
+
+
+
+
+/****** BLOCKS ******/
+.block {
+    margin-bottom: 20px;
+}
+.block h3 {}
+
+.block_blue {
+    margin-bottom: 20px;
+    padding: 10px;
+    color: #fff;
+    background-color: #2F96B4;
+}
+.block_blue h3 {}
+
+.block_green {
+    margin-bottom: 20px;
+    padding: 10px;
+    color: #fff;
+    background-color: #51A351
+}
+.block_green h3 {}
+
+
+
+
+
+/****** EOF ******/

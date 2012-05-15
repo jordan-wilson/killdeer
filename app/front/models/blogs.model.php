@@ -1,15 +1,15 @@
 <?php
 
-class blog_model extends model
+class blogs_model extends model
 {
     
     public function get_landing()
     {
         $arr = array();
-        $arr[] = $this->blogs(4);
-        $arr[] = $this->blogs(3);
-        $arr[] = $this->blogs(2);
-        $arr[] = $this->blogs(1);
+        $arr[] = $this->get_blog(4);
+        $arr[] = $this->get_blog(3);
+        $arr[] = $this->get_blog(2);
+        $arr[] = $this->get_blog(1);
         return $arr;
     }
     
@@ -19,16 +19,16 @@ class blog_model extends model
         switch( $url )
         {
             case 'blog1':
-                return $this->blogs(1);
+                return $this->get_blog(1);
                 break;
             case 'blog2':
-                return $this->blogs(2);
+                return $this->get_blog(2);
                 break;
             case 'blog3':
-                return $this->blogs(3);
+                return $this->get_blog(3);
                 break;
             case 'blog4':
-                return $this->blogs(4);
+                return $this->get_blog(4);
                 break;
         }
         
@@ -36,7 +36,7 @@ class blog_model extends model
     }
     
     
-    public function blogs( $id = 0 )
+    public function get_blog( $id = 0 )
     {
         $arr = array();
         
@@ -47,7 +47,8 @@ class blog_model extends model
             'content' => '<p>Ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Donec id elit non mi porta gravida at eget metus.</p>',
             'meta_title' => 'Blog :: Blog 1',
             'meta_keywords' => '',
-            'meta_description' => ''
+            'meta_description' => '',
+            'layout' => 6
         );
         
         $arr[2] = array(
@@ -57,7 +58,8 @@ class blog_model extends model
             'content' => '<p>Donec id elit non mi porta gravida at eget metus. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>',
             'meta_title' => 'Blog 2',
             'meta_keywords' => '',
-            'meta_description' => ''
+            'meta_description' => '',
+            'layout' => 6
         );
         
         $arr[3] = array(
@@ -67,7 +69,8 @@ class blog_model extends model
             'content' => '<p>Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>',
             'meta_title' => 'Blog 3',
             'meta_keywords' => '',
-            'meta_description' => ''
+            'meta_description' => '',
+            'layout' => 6
         );
         
         $arr[4] = array(
@@ -77,7 +80,8 @@ class blog_model extends model
             'content' => '<p>Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>',
             'meta_title' => 'Blog 4',
             'meta_keywords' => '',
-            'meta_description' => ''
+            'meta_description' => '',
+            'layout' => 6
         );
         
         if ( $arr[$id] )

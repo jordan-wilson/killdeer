@@ -32,7 +32,7 @@ class router
                 $_args[] = $request_parts[$i];
             }
         }
-        $this->registry->request_args = $_args;
+        $this->registry->request_args = count($_args) ? $_args : array('index');
     }
     
     

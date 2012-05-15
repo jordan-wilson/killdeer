@@ -7,7 +7,7 @@ session_start();
 define('SITE_ROOT', dirname(__FILE__));
 define('APP', 'front');
 define('URL_BASE', '/');
-define('DEFAULT_CONTROLLER', 'page');
+define('DEFAULT_CONTROLLER', 'pages');
 define('DEFAULT_SKIN', 'default');
 define('ERROR_CONTROLLER', 'error');
 define('DEFAULT_MAIN_TEMPLATE', 'layout.main.template.php');

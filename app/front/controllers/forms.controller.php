@@ -9,18 +9,15 @@ class forms extends controller
     public function get_block( $id = 0 )
     {
         // check if form is unique
-        if (in_array($id, $this->forms))
-            return '<p><strong>!!! Form:' . $id . ' already in use on the page. Can only have a single instance of any form on a page.</strong></p>';
+        if (in_array($id, $this->forms)) return '<p>FORM ' . $id . ' IS ALREADY IN USE ON THIS PAGE. YOU CANNOT HAVE MULTIPLE INSTANCES OF A FORM ON A SINGLE PAGE AT ONE TIME.</p>';
         $this->forms[] = $id;
         
-        
+        // get the page url
         $request = $this->registry->request_args;
         if ( ! count($request)) return '';
-        
-        // the page url
         $url = $request[0];
         
-        // check if submitted
+        // check if this form has been submitted
         // url would look like this: www.site.com/page/5/submit
         $this->submitted = false;
         $action = count($request) > 2 ? array_pop($request) : false;
@@ -98,6 +95,7 @@ class forms extends controller
                 $html .= $form['content'];
             $html .= '</div>';
         }
+        
         // else, return the form
         else
         {

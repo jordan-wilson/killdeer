@@ -1,0 +1,43 @@
+
+
+/* blogs landing page */
+.blogs_landing {}
+.blogs_landing .blogs_post {
+    margin-bottom: 20px;
+}
+.blogs_landing .blogs_post_name {}
+.blogs_landing .blog_post_name h2 {}
+.blogs_landing .blogs_post_date {
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+.blogs_landing .blogs_post_content {
+    margin-bottom: 10px;
+}
+.blogs_landing .blogs_post_link {}
+
+
+/* individual blog post */
+.blogs_view {}
+.blogs_view .blogs_post {}
+.blogs_view .blogs_post_name {}
+.blogs_view .blog_post_name h2 {}
+.blogs_view .blogs_post_date {
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+.blogs_view .blogs_post_content {}
+    
+
+
+/* blogs blocks */
+.blogs_subscribe_block {
+    margin-bottom: 20px;
+}
+.blogs_categories_block {
+    margin-bottom: 20px;
+}
+.blogs_recent_block {
+    margin-bottom: 20px;
+}
+
