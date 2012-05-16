@@ -3,6 +3,37 @@
 class blogs extends controller 
 {
 
+    public function hey()
+    {
+        $request = $this->registry->request_args;
+        ///*
+        // blog landing page
+        if (count($request) == 1)
+        {
+            $this->index();
+        }
+        
+        // individual blog post
+        elseif (count($request) == 2)
+        {
+            $this->view( $request[1] );
+        }
+        //*/
+        /*
+        // load the individual blogs layout
+        if (count($request) == 2)
+        {
+            // get blog info
+            $blogs_model = load_model('blogs');
+            $data['blog'] = $blogs_model->get_view($request[1]);
+        
+            // get layout data
+            $layouts_model = load_model('layouts');
+            $this->pages->data['layout'] = $layouts_model->get_layout($data['blog']['layout']);
+        }
+        */
+    }
+
     private function add_css()
     {
         $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/blogs.css';
@@ -40,7 +71,8 @@ class blogs extends controller
         }
         
         // individual blog block
-        elseif (is_numeric($arg))
+        //elseif (is_numeric($arg))
+        if (is_numeric($arg))
         {
             return $this->get_blog_block($arg);
         }
@@ -83,7 +115,11 @@ class blogs extends controller
         $this->add_css();
         
         // load landing page
-        return load_view('blogs.landing.template.php', $data);
+        //return load_view('blogs.landing.template.php', $data);
+        
+        
+        // override default page content
+        $this->registry->page_content = load_view('blogs.landing.template.php', $data);
     }
     
     
@@ -96,7 +132,7 @@ class blogs extends controller
         $data = $this->pages->data;
         
         // clear default page content
-        $this->registry->page_content = '';
+        //$this->registry->page_content = '';
                 
         // get blog info
         $blogs_model = load_model('blogs');
@@ -121,7 +157,16 @@ class blogs extends controller
         $this->add_css();
         
         // load blog post
-        return load_view('blogs.view.template.php', $data);
+        //return load_view('blogs.view.template.php', $data);
+        
+        ///*
+        // get layout data
+        $layouts_model = load_model('layouts');
+        $this->pages->data['layout'] = $layouts_model->get_layout($data['blog']['layout']);
+        
+        // override default page content
+        $this->registry->page_content = load_view('blogs.view.template.php', $data);
+        //*/
     }
     
     

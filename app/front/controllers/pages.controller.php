@@ -4,6 +4,7 @@ class pages extends controller
 {
     
     public $data = array();
+    //public $layout = array();
     
     public function index()
     {
@@ -28,6 +29,7 @@ class pages extends controller
         $this->update_page_content();
         
         // update page layout
+        $this->load_layout();
         $this->process_layouts();
         
         // display layout template
@@ -89,15 +91,34 @@ class pages extends controller
     }
     
     
+    private function load_layout()
+    {
+        // this may override the default content, meta, or the layout
+        
+        // get layout data
+        $layouts_model = load_model('layouts');
+        $this->data['layout'] = $layouts_model->get_layout($this->data['layout']);
+        
+        // if there is layout data
+        if (count($this->data['layout']))
+        {
+            $controller = load_controller($this->data['layout']['template']);
+            if ($controller)
+                $controller->hey();
+        }
+    }
+    
+    
     // load blocks into each cell of layout
     public function process_layouts()
     {
         // get layout data
-        $layouts_model = load_model('layouts');
-        $layout = $layouts_model->get_layout($this->data['layout']);
+        //$layouts_model = load_model('layouts');
+        //$layout = $layouts_model->get_layout($this->data['layout']);
         
         // if there is layout data
         //$layout = $this->data['layout'];
+        $layout = $this->data['layout'];
         if (count($layout))
         {
             // load layout template

@@ -41,7 +41,8 @@ class layouts_model extends model
                 $arr = array(
                     'template' => 'blogs',
                     'cells' => array(
-                        1 => array('[content]','[blogs:content]'),
+                        //1 => array('[content]','[blogs:content]'),
+                        1 => array('[content]'),
                         2 => array('[blocks:1]','[blogs:subscribe.block]','[blocks:3]','[blogs:categories.block]','[blogs:recent.block]')
                     )
                 );
@@ -79,7 +80,8 @@ class layouts_model extends model
                 $arr = array(
                     'template' => 'blogs',
                     'cells' => array(
-                        1 => array('[blogs:content]'),
+                        //1 => array('[blogs:content]', '[content]'),
+                        1 => array('[content]', '[blocks:1]'),
                         2 => array('[blogs:subscribe.block]','[blogs:categories.block]','[blogs:recent.block]')
                     )
                 );
