@@ -3,10 +3,10 @@
 class blogs extends controller 
 {
 
-    public function hey()
+    public function layout()
     {
         $request = $this->registry->request_args;
-        ///*
+        
         // blog landing page
         if (count($request) == 1)
         {
@@ -18,22 +18,83 @@ class blogs extends controller
         {
             $this->view( $request[1] );
         }
-        //*/
-        /*
-        // load the individual blogs layout
-        if (count($request) == 2)
-        {
-            // get blog info
-            $blogs_model = load_model('blogs');
-            $data['blog'] = $blogs_model->get_view($request[1]);
         
-            // get layout data
-            $layouts_model = load_model('layouts');
-            $this->pages->data['layout'] = $layouts_model->get_layout($data['blog']['layout']);
-        }
-        */
     }
-
+    
+    
+    // blogs landing page
+    private function index()
+    {
+        // load main template
+        $template = 'layout.blogs.template.php';
+        $path = SITE_ROOT . '/skins/' . APP . '/' . $this->registry->skin . '/' . $template;
+        if (file_exists($path))
+            $this->registry->main_template = $template;
+        
+        
+        // get page data
+        $data = $this->registry->page_data;
+                
+        // get recent blogs
+        $blogs_model = load_model('blogs');
+        $data['blogs'] = $blogs_model->get_landing();
+        
+        // add css
+        $this->add_css();
+        
+        // replace page content
+        $this->registry->page_content = load_view('blogs.landing.template.php', $data);
+    }
+    
+    
+    // individual blog post
+    private function view( $url = ''  )
+    {
+        // load main template
+        $template = 'layout.blogs.template.php';
+        $path = SITE_ROOT . '/skins/' . APP . '/' . $this->registry->skin . '/' . $template;
+        if (file_exists($path))
+            $this->registry->main_template = $template;
+        
+        
+        // get page data
+        $data = $this->registry->page_data;
+        
+        // get blog info
+        $blogs_model = load_model('blogs');
+        $data['blog'] = $blogs_model->get_view($url);
+        
+        // if blog not found
+        /*if ( ! $data['blog'])
+        {
+            if (method_exists($this->pages, 'error_page'))
+            {
+                $this->pages->error_page();
+            }
+        }*/
+                
+        // update meta
+        /*if (method_exists($this->pages, 'update_meta'))
+        {
+            $this->pages->update_meta($data['blog']);
+        }*/
+        
+        // add css
+        $this->add_css();
+        
+        
+        // replace page layout
+        $layouts_model = load_model('layouts');
+        $layout = $layouts_model->get_layout($data['blog']['layout']);
+        if (count($layout))
+            $this->registry->page_layout = $layout;
+        
+        
+        // replace page content
+        $this->registry->page_content = load_view('blogs.view.template.php', $data);
+    }
+    
+    
     private function add_css()
     {
         $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/blogs.css';
@@ -96,77 +157,6 @@ class blogs extends controller
         }
         
         return '';
-    }
-    
-    
-    // blogs landing page
-    public function index()
-    {
-        if ( ! $this->pages) return;
-        
-        // get page data
-        $data = $this->pages->data;
-                
-        // get recent blogs
-        $blogs_model = load_model('blogs');
-        $data['blogs'] = $blogs_model->get_landing();
-        
-        // add css
-        $this->add_css();
-        
-        // load landing page
-        //return load_view('blogs.landing.template.php', $data);
-        
-        
-        // override default page content
-        $this->registry->page_content = load_view('blogs.landing.template.php', $data);
-    }
-    
-    
-    // individual blog post
-    public function view( $url = ''  )
-    {
-        if ( ! $this->pages) return;
-        
-        // get page data
-        $data = $this->pages->data;
-        
-        // clear default page content
-        //$this->registry->page_content = '';
-                
-        // get blog info
-        $blogs_model = load_model('blogs');
-        $data['blog'] = $blogs_model->get_view($url);
-        
-        // if blog not found
-        if ( ! $data['blog'])
-        {
-            if (method_exists($this->pages, 'error_page'))
-            {
-                $this->pages->error_page();
-            }
-        }
-                
-        // update meta
-        if (method_exists($this->pages, 'update_meta'))
-        {
-            $this->pages->update_meta($data['blog']);
-        }
-        
-        // add css
-        $this->add_css();
-        
-        // load blog post
-        //return load_view('blogs.view.template.php', $data);
-        
-        ///*
-        // get layout data
-        $layouts_model = load_model('layouts');
-        $this->pages->data['layout'] = $layouts_model->get_layout($data['blog']['layout']);
-        
-        // override default page content
-        $this->registry->page_content = load_view('blogs.view.template.php', $data);
-        //*/
     }
     
     

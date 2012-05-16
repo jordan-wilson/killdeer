@@ -1,4 +1,5 @@
-    
+
+    <?php echo '<pre>' . print_r($data, true) . '</pre>'; ?>
     <?php if ( count($blogs) ) : ?>
     
         <div class="blogs_landing">

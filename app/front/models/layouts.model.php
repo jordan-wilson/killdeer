@@ -11,7 +11,7 @@ class layouts_model extends model
         {
             case 1: // home
                 $arr = array(
-                    'template' => '',
+                    'controller' => '',
                     'cells' => array(
                         1 => array('[content]'),
                         2 => array('[blocks:6]'),
@@ -25,7 +25,7 @@ class layouts_model extends model
             
             case 2: // about
                 $arr = array(
-                    'template' => '',
+                    'controller' => '',
                     'cells' => array(
                         1 => array('[content]'),
                         2 => array('[blocks:1]', '[blocks:2]'),
@@ -39,7 +39,7 @@ class layouts_model extends model
             
             case 3: // blog
                 $arr = array(
-                    'template' => 'blogs',
+                    'controller' => 'blogs',
                     'cells' => array(
                         //1 => array('[content]','[blogs:content]'),
                         1 => array('[content]'),
@@ -50,7 +50,7 @@ class layouts_model extends model
             
             case 4: // contact
                 $arr = array(
-                    'template' => '',
+                    'controller' => '',
                     'cells' => array(
                         1 => array('[content]','[forms:1]'),
                         2 => array('[blocks:6]','[forms:2]'),
@@ -64,7 +64,7 @@ class layouts_model extends model
                 
             case 5: // error
                 $arr = array(
-                    'template' => '',
+                    'controller' => '',
                     'cells' => array(
                         1 => array('[content]'),
                         2 => array('[blocks:6]'),
@@ -78,7 +78,7 @@ class layouts_model extends model
             
             case 6: // blogs > blog 1, 2, 3, 4
                 $arr = array(
-                    'template' => 'blogs',
+                    'controller' => 'blogs',
                     'cells' => array(
                         //1 => array('[blogs:content]', '[content]'),
                         1 => array('[content]', '[blocks:1]'),

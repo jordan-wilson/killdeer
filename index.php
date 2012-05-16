@@ -7,10 +7,11 @@ session_start();
 define('SITE_ROOT', dirname(__FILE__));
 define('APP', 'front');
 define('URL_BASE', '/');
-define('DEFAULT_CONTROLLER', 'pages');
+define('DEFAULT_CONTROLLER', 'layouts');
 define('DEFAULT_SKIN', 'default');
 define('ERROR_CONTROLLER', 'error');
 define('DEFAULT_MAIN_TEMPLATE', 'layout.main.template.php');
+define('DEFAULT_LAYOUT_CONTROLLER', 'pages');
 
 // LOAD APP FUNCTIONS & OVERRIDES
 $path = SITE_ROOT . '/app/' . APP . '/core/functions.php';

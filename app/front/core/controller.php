@@ -15,19 +15,19 @@ class controller
         }
         
         // set default main template
-        $this->main_template = DEFAULT_MAIN_TEMPLATE;
+        //$this->main_template = DEFAULT_MAIN_TEMPLATE;
     }
     
     public function display()
     {
-        if ( ! isset($this->layout))
+        if ( ! isset($this->registry->page_layout))
         {
             exit ('Layout not yet initialized');
         }
         else
         {
-            $data = array('layout' => $this->layout);
-            echo load_view($this->main_template, $data);
+            $data = array('layout' => $this->registry->page_layout);
+            echo load_view($this->registry->main_template, $data);
         }
     }
 }
