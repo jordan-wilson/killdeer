@@ -2,7 +2,7 @@
 
 class error extends controller
 {
-
+    
     public function page_not_found()
     {
         if (is_ajax_request()) 
@@ -12,10 +12,11 @@ class error extends controller
         else
         {
             header('HTTP/1.1 404 Not Found');
-            echo load_view('error.template.php', array('message'=>'Page not found'));
+            echo load_view('error.template.php', array('code'=>'404'));
         }
         exit;
     }
+    
     
     public function forbidden()
     {
@@ -26,7 +27,7 @@ class error extends controller
         else
         {
             header("HTTP/1.1 403 Forbidden");
-            echo load_view('error.template.php', array('message'=>'Forbidden'));
+            echo load_view('error.template.php', array('code'=>'403'));
         }
         exit;
     }

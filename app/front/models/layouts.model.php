@@ -87,6 +87,13 @@ class layouts_model extends model
                 );
                 break;
             
+            default: // default layout for pages without one
+                $arr = array(
+                    'controller' => '',
+                    'cells' => array(
+                        1 => array('[content]')
+                    )
+                );
         }
         
         return $arr;

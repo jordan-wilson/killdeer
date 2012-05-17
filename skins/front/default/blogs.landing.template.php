@@ -1,5 +1,4 @@
-
-    <?php echo '<pre>' . print_r($data, true) . '</pre>'; ?>
+    
     <?php if ( count($blogs) ) : ?>
     
         <div class="blogs_landing">
@@ -20,7 +19,7 @@
                     </div>
                     
                     <div class="blogs_post_link">
-                        <a href="<?= $url . '/' . $blog['url']; ?>">read more</a>
+                        <a href="<?= $registry->page_data['url'] . '/' . $blog['url']; ?>">read more</a>
                     </div>
                 </div>
                 

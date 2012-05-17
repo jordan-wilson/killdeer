@@ -2,100 +2,86 @@
 
 class blogs extends controller 
 {
-
-    public function layout()
+    
+    public function index()
     {
-        $request = $this->registry->request_args;
+        // update main template
+        $this->main_template = 'layout.blogs.template.php';
         
-        // blog landing page
+        // update page content
+        $request = $this->registry->request_args;
         if (count($request) == 1)
         {
-            $this->index();
+            // landing page
+            $this->registry->page_content = $this->_index();
         }
-        
-        // individual blog post
         elseif (count($request) == 2)
         {
-            $this->view( $request[1] );
+            // individual blog post
+            $this->registry->page_content = $this->_view($request[1]);
+        }
+        else {
+            header('Location: /error');
+            exit();
         }
         
+        // parse page layout
+        $this->parse_page_layout();
+        
+        // output the page
+        $this->display();
     }
     
     
     // blogs landing page
-    private function index()
+    private function _index()
     {
-        // load main template
-        $template = 'layout.blogs.template.php';
-        $path = SITE_ROOT . '/skins/' . APP . '/' . $this->registry->skin . '/' . $template;
-        if (file_exists($path))
-            $this->registry->main_template = $template;
-        
-        
-        // get page data
-        $data = $this->registry->page_data;
-                
         // get recent blogs
         $blogs_model = load_model('blogs');
         $data['blogs'] = $blogs_model->get_landing();
         
         // add css
-        $this->add_css();
+        $this->_add_css();
         
-        // replace page content
-        $this->registry->page_content = load_view('blogs.landing.template.php', $data);
+        // return html
+        return load_view('blogs.landing.template.php', $data);
     }
     
     
     // individual blog post
-    private function view( $url = ''  )
+    private function _view( $url = ''  )
     {
-        // load main template
-        $template = 'layout.blogs.template.php';
-        $path = SITE_ROOT . '/skins/' . APP . '/' . $this->registry->skin . '/' . $template;
-        if (file_exists($path))
-            $this->registry->main_template = $template;
-        
-        
-        // get page data
-        $data = $this->registry->page_data;
-        
-        // get blog info
+        // get blog data
         $blogs_model = load_model('blogs');
         $data['blog'] = $blogs_model->get_view($url);
         
         // if blog not found
-        /*if ( ! $data['blog'])
+        if ( ! $data['blog'])
         {
-            if (method_exists($this->pages, 'error_page'))
-            {
-                $this->pages->error_page();
-            }
-        }*/
-                
-        // update meta
-        /*if (method_exists($this->pages, 'update_meta'))
-        {
-            $this->pages->update_meta($data['blog']);
-        }*/
+            header('Location: /error');
+            exit();
+        }
         
-        // add css
-        $this->add_css();
+        // update meta tags
+        $this->registry->update_meta($data['blog']);
         
-        
-        // replace page layout
+        // get blog layout
         $layouts_model = load_model('layouts');
         $layout = $layouts_model->get_layout($data['blog']['layout']);
+        
+        // update page layout
         if (count($layout))
             $this->registry->page_layout = $layout;
         
+        // add css
+        $this->_add_css();
         
-        // replace page content
-        $this->registry->page_content = load_view('blogs.view.template.php', $data);
+        // return html
+        return load_view('blogs.view.template.php', $data);
     }
     
     
-    private function add_css()
+    private function _add_css()
     {
         $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/blogs.css';
         $this->registry->add_css_by_url($css);
@@ -104,56 +90,33 @@ class blogs extends controller
     
     public function get_block( $arg = '' )
     {
-        // blog content
-        if ( $arg == 'content' )
-        {
-            $request = $this->registry->request_args;
-            
-            // blog landing page
-            if (count($request) == 1)
-            {
-                return $this->index();
-            }
-            
-            // blog post
-            elseif (count($request) == 2)
-            {
-                return $this->view( $request[1] );
-            }
-            
-            // to many arguments in the url
-            elseif ($this->pages)
-            {
-                if (method_exists($this->pages, 'error_page'))
-                {
-                    $this->pages->error_page();
-                }
-            }
-        }
+        // check if the blogs module is on a page
+        if ( ! $this->registry->modules['blogs'])
+            return '';
+        
         
         // individual blog block
-        //elseif (is_numeric($arg))
         if (is_numeric($arg))
         {
-            return $this->get_blog_block($arg);
+            return $this->_get_blog_block($arg);
         }
         
         // subscribe block
         elseif ($arg == 'subscribe.block')
         {
-            return $this->get_subscribe_block();
+            return $this->_get_subscribe_block();
         }
         
         // recent blog post block
         elseif ($arg == 'recent.block')
         {
-            return $this->get_recent_block();
+            return $this->_get_recent_block();
         }
         
         // blog categories block
         elseif ($arg == 'categories.block')
         {
-            return $this->get_categories_block();
+            return $this->_get_categories_block();
         }
         
         return '';
@@ -161,57 +124,65 @@ class blogs extends controller
     
     
     // individual blog block
-    private function get_blog_block( $id = 0 )
+    private function _get_blog_block( $id = 0 )
     {
-        if ( ! $this->registry->modules['blogs']) return '';
+        // the url of the blogs page
+        $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
         
         // get blog info
         $blogs_model = load_model('blogs');
         $data['blog'] = $blogs_model->get_blog($id);
-        $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
         
         // if blog not found
         if ( ! $data['blog']) return '';
         
         // add css
-        $this->add_css();
+        $this->_add_css();
         
-        // load blog post
+        // return html
         return load_view('blogs.blog.block.template.php', $data);
     }
     
     
     // subscribe block
-    private function get_subscribe_block()
+    private function _get_subscribe_block()
     {
-        if ( ! $this->registry->modules['blogs']) return '';
+        // the url of the blogs page
         $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
         
-        // load blog subscribe block
+        // add css
+        $this->_add_css();
+        
+        // return html
         return load_view('blogs.subscribe.block.template.php', $data);
     }
     
     
     // categories block
-    private function get_categories_block()
+    private function _get_categories_block()
     {
-        if ( ! $this->registry->modules['blogs']) return '';
+        // the url of the blogs page
         $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
         
-        // load blog categories block
+        // add css
+        $this->_add_css();
+        
+        // return html
         return load_view('blogs.categories.block.template.php', $data);
     }
     
     
     // recent blog post block
-    private function get_recent_block()
+    private function _get_recent_block()
     {
-        if ( ! $this->registry->modules['blogs']) return '';
+        // the url of the blogs page
         $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
         
-        // load recent blog post block
+        // add css
+        $this->_add_css();
+        
+        // return html
         return load_view('blogs.recent.block.template.php', $data);
     }
-    
     
 }
