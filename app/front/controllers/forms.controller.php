@@ -8,8 +8,12 @@ class forms extends controller
     
     public function get_block( $id = 0 )
     {
+        if ( ! is_numeric($id)) return '';
+        
         // check if form is unique
-        if (in_array($id, $this->forms)) return '<p>FORM ' . $id . ' IS ALREADY IN USE ON THIS PAGE. YOU CANNOT HAVE MULTIPLE INSTANCES OF A FORM ON A SINGLE PAGE AT ONE TIME.</p>';
+        if (in_array($id, $this->forms))
+            return '<div class="forms_block" style="padding:5px; color:#fff; background-color:#870217">Form ' . $id . ' is already in use on this page. Only one instance of a form is allowed on the page.</div>';
+        
         $this->forms[] = $id;
         
         // get the page url
@@ -29,16 +33,16 @@ class forms extends controller
             {
                 // return either the form with errors or thank you text
                 $this->submitted = true;
-                return $this->build_form($id, $url, true);
+                return $this->_build_form($id, $url, true);
             }
         }
         
         // return the form
-        return $this->build_form($id, $url);
+        return $this->_build_form($id, $url);
     }
     
     
-    public function build_form( $id = 0, $url = '', $validate = false )
+    private function _build_form( $id = 0, $url = '', $validate = false )
     {
         // get form info
         $forms_model = load_model('forms');
@@ -68,54 +72,28 @@ class forms extends controller
         
         
         // add css
-        $this->add_css();
+        $this->_add_css();
         
         
-        // the forms classname
-        switch($form['type'])
-        {
-            case 'horizontal':
-                $class = 'class="form_horizontal"';
-                break;
-            default:
-                $class = '';
-        }
+        // build the data array
+        $data = array();
+        $data['type'] = $form['type'];
+        $data['fields'] = join('', $fields);
+        $data['content'] = $form['content'];
+        $data['submitted'] = $this->submitted;
         
         // the anchor link
-        $name = 'form' . $form['id'];
+        $data['name'] = 'form' . $form['id'];
         
+        // the post url
+        $data['action'] = '/' . $url . '/' . $form['id'] . '/submit#' . $data['name'];
         
-        $html = '';
-        
-        // return thank you text
-        if ($this->submitted)
-        {
-            $html .= '<a name="' . $name . '"></a>';
-            $html .= '<div class="form_submitted">';
-                $html .= $form['content'];
-            $html .= '</div>';
-        }
-        
-        // else, return the form
-        else
-        {
-            // the post url
-            $action = '/' . $url . '/' . $form['id'] . '/submit#' . $name;
-            
-            // build the form
-            $html .= '<form ' . $class . ' id="' . $name . '" action="' . $action . '" method="post">';
-                $html .= join('', $fields);
-                $html .= '<div class="form_actions">';
-                    $html .= '<button type="submit" class="btn">Submit</button>';
-                $html .= '</div>';
-            $html .= '</form>';
-        }
-        
-        return $html;
+        // load view
+        return load_view('forms.default.block.php', $data);
     }
     
     
-    private function add_css()
+    private function _add_css()
     {
         $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/forms.css';
         $this->registry->add_css_by_url($css);
@@ -127,15 +105,19 @@ class forms extends controller
         switch($arr['type'])
         {
             case 'text_input':
-                return $this->get_text_input($arr, $validate);
+                return $this->_get_text_input($arr, $validate);
                 break;
             
             case 'textarea':
-                return $this->get_textarea($arr, $validate);
+                return $this->_get_textarea($arr, $validate);
                 break;
             
             case 'select':
-                return $this->get_select($arr, $validate);
+                return $this->_get_select($arr, $validate);
+                break;
+            
+            case 'heading':
+                return $this->_get_heading($arr);
                 break;
         }
         return false;
@@ -143,7 +125,7 @@ class forms extends controller
     
     
     // focus on first incomplete field
-    private function add_input_focus( $id = '' )
+    private function _add_input_focus( $id = '' )
     {
         if ($this->submitted)
         {
@@ -154,7 +136,7 @@ class forms extends controller
     
     
     // label
-    private function get_field_label( $id = 0, $arr = array() )
+    private function _get_field_label( $id = 0, $arr = array() )
     {
         $html = '';
         
@@ -171,7 +153,7 @@ class forms extends controller
     
     
     // text input
-    private function get_text_input( $arr = array(), $validate = false )
+    private function _get_text_input( $arr = array(), $validate = false )
     {
         $id = 'field_' . $arr['id'];
         $value = load_core('input')->post($id);
@@ -184,14 +166,14 @@ class forms extends controller
                 if (empty($value))
                 {
                     $error = '<div class="form_error">Please fill in this required field.</div>';
-                    $this->add_input_focus($id);
+                    $this->_add_input_focus($id);
                     $this->submitted = false;
                 }
             }
         }
         
         $html .= '<div class="input_container">';
-            $html .= $this->get_field_label($id, $arr);
+            $html .= $this->_get_field_label($id, $arr);
             $html .= '<div class="form_field">';
                 $html .= '<input type="text" id="' . $id . '" name="' . $id . '" value="' . htmlentities($value) . '" />';
                 $html .= $error;
@@ -203,7 +185,7 @@ class forms extends controller
     
     
     // textarea
-    private function get_textarea( $arr = array(), $validate = false )
+    private function _get_textarea( $arr = array(), $validate = false )
     {
         $id = 'field_' . $arr['id'];
         $value = load_core('input')->post($id);
@@ -216,14 +198,14 @@ class forms extends controller
                 if (empty($value))
                 {
                     $error = '<div class="form_error">Please fill in this required field.</div>';
-                    $this->add_input_focus($id);
+                    $this->_add_input_focus($id);
                     $this->submitted = false;
                 }
             }
         }
         
         $html .= '<div class="input_container">';
-            $html .= $this->get_field_label($id, $arr);
+            $html .= $this->_get_field_label($id, $arr);
             $html .= '<div class="form_field">';
                 $html .= '<textarea id="' . $id . '" name="' . $id . '">' . $value . '</textarea>';
                 $html .= $error;
@@ -235,7 +217,7 @@ class forms extends controller
     
     
     // select
-    private function get_select( $arr = array(), $validate = false )
+    private function _get_select( $arr = array(), $validate = false )
     {
         $id = 'field_' . $arr['id'];
         $value = load_core('input')->post($id);
@@ -248,14 +230,14 @@ class forms extends controller
                 if (empty($value))
                 {
                     $error = '<div class="form_error">Please select an option.</div>';
-                    $this->add_input_focus($id);
+                    $this->_add_input_focus($id);
                     $this->submitted = false;
                 }
             }
         }
         
         $html .= '<div class="input_container">';
-            $html .= $this->get_field_label($id, $arr);
+            $html .= $this->_get_field_label($id, $arr);
             $html .= '<div class="form_field">';
                 $html .= '<select id="' . $id . '" name="' . $id . '">';
                     $html .= '<option value=""></option>';
@@ -266,6 +248,17 @@ class forms extends controller
                 $html .= '</select>';
                 $html .= $error;
             $html .= '</div>';
+        $html .= '</div>';
+        
+        return $html;
+    }
+    
+    
+    // heading
+    private function _get_heading( $arr = array() )
+    {
+        $html .= '<div class="input_heading">';
+            $html .= $arr['label'];
         $html .= '</div>';
         
         return $html;

@@ -31,6 +31,14 @@
 
 
 /* blogs blocks */
+.blogs_blog_block {
+    margin-bottom: 20px;
+}
+.blogs_blog_full {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #EEE8AA;
+}
 .blogs_subscribe_block {
     margin-bottom: 20px;
 }
@@ -39,5 +47,14 @@
 }
 .blogs_recent_block {
     margin-bottom: 20px;
+}
+.blogs_recent_block2 {
+    margin-bottom: 20px;
+    padding: 10px;
+    color: #fff;
+    background-color: #51A351;
+}
+.blogs_recent_block2 a {
+    color: #fff !important;
 }
 

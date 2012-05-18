@@ -15,7 +15,12 @@ class controller
         }
         
         // set default main template
-        $this->main_template = DEFAULT_MAIN_TEMPLATE;
+        $this->header_template = DEFAULT_HEADER_TEMPLATE;
+        $this->layout_template = DEFAULT_LAYOUT_TEMPLATE;
+        $this->footer_template = DEFAULT_FOOTER_TEMPLATE;
+        
+        // used as a fallback if custom layout isn't found
+        $this->default_layout_template = '';
     }
     
     
@@ -26,12 +31,20 @@ class controller
         
         if (count($layout))
         {
+            // update layout template
+            $layout_controller = ($layout['controller'] == '') ? DEFAULT_CONTROLLER : $layout['controller'];
+            $layout_skin = ($layout['skin'] == '') ? 'default' : $layout['skin'];
+            $layout_template = $layout_controller . '.' . $layout_skin . '.layout.php';
+            $this->layout_template = $layout_template;
+            $this->default_layout_template = DEFAULT_LAYOUT_TEMPLATE;
+            
+            
             // load block content into each cell of the layout
             foreach($layout['cells'] as $i => $cell)
             {
                 foreach($cell as $j => $block)
                 {
-                    $html = '';
+                    $html = $block;
                     
                     // if regular page content
                     if ($block == '[content]')
@@ -77,8 +90,15 @@ class controller
         }
         else
         {
+            // load header
+            echo load_view($this->header_template);
+            
+            // load layout (with default fallback)
             $data = array('layout' => $this->registry->page_layout);
-            echo load_view($this->main_template, $data);
+            echo load_view($this->layout_template, $data, $this->default_layout_template);
+            
+            // load footer
+            echo load_view($this->footer_template);
         }
     }
 }

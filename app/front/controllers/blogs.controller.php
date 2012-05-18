@@ -5,9 +5,6 @@ class blogs extends controller
     
     public function index()
     {
-        // update main template
-        $this->main_template = 'layout.blogs.template.php';
-        
         // update page content
         $request = $this->registry->request_args;
         if (count($request) == 1)
@@ -21,6 +18,13 @@ class blogs extends controller
             $this->registry->page_content = $this->_view($request[1]);
         }
         else {
+            /*
+                Right now I'm just redirecting the user to the error page since
+                I can't figure out how to load the error page using the pages
+                controller in an efficient way. I'll probably need to stick it
+                where everyone can call it. Like the base 'controller' or 
+                'registry' classes.
+            */
             header('Location: /error');
             exit();
         }
@@ -44,7 +48,7 @@ class blogs extends controller
         $this->_add_css();
         
         // return html
-        return load_view('blogs.landing.template.php', $data);
+        return load_view('blogs.index.template.php', $data);
     }
     
     
@@ -94,29 +98,32 @@ class blogs extends controller
         if ( ! $this->registry->modules['blogs'])
             return '';
         
+        // splite the argument into an array by '.'
+        $arg = explode('.', $arg);
+        
         
         // individual blog block
-        if (is_numeric($arg))
+        if (is_numeric($arg[0]))
         {
             return $this->_get_blog_block($arg);
         }
         
         // subscribe block
-        elseif ($arg == 'subscribe.block')
+        elseif ($arg[0] == 'subscribe')
         {
-            return $this->_get_subscribe_block();
+            return $this->_get_subscribe_block($arg);
         }
         
         // recent blog post block
-        elseif ($arg == 'recent.block')
+        elseif ($arg[0] == 'recent')
         {
-            return $this->_get_recent_block();
+            return $this->_get_recent_block($arg);
         }
         
         // blog categories block
-        elseif ($arg == 'categories.block')
+        elseif ($arg[0] == 'categories')
         {
-            return $this->_get_categories_block();
+            return $this->_get_categories_block($arg);
         }
         
         return '';
@@ -124,14 +131,14 @@ class blogs extends controller
     
     
     // individual blog block
-    private function _get_blog_block( $id = 0 )
+    private function _get_blog_block( $arg = array() )
     {
         // the url of the blogs page
         $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
         
         // get blog info
         $blogs_model = load_model('blogs');
-        $data['blog'] = $blogs_model->get_blog($id);
+        $data['blog'] = $blogs_model->get_blog($arg[0]);
         
         // if blog not found
         if ( ! $data['blog']) return '';
@@ -139,13 +146,24 @@ class blogs extends controller
         // add css
         $this->_add_css();
         
-        // return html
-        return load_view('blogs.blog.block.template.php', $data);
+        // the default template
+        $default = 'blogs.blog.default.block.php';
+        
+        // if using custom template
+        if ($arg[1])
+        {
+            // load the custom template
+            $template = 'blogs.blog.' . $arg[1] . '.block.php';
+            return load_view($template, $data, $default);
+        }
+        
+        // load the default template
+        return load_view($default, $data);
     }
     
     
     // subscribe block
-    private function _get_subscribe_block()
+    private function _get_subscribe_block( $arg = array() )
     {
         // the url of the blogs page
         $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
@@ -153,27 +171,49 @@ class blogs extends controller
         // add css
         $this->_add_css();
         
-        // return html
-        return load_view('blogs.subscribe.block.template.php', $data);
+        // the default template
+        $default = 'blogs.subscribe.default.block.php';
+        
+        // if using custom template
+        if ($arg[1])
+        {
+            // load the custom template
+            $template = 'blogs.subscribe.' . $arg[1] . '.block.php';
+            return load_view($template, $data, $default);
+        }
+        
+        // load the default template
+        return load_view($default, $data);
     }
     
     
     // categories block
-    private function _get_categories_block()
+    private function _get_categories_block( $arg = array() )
     {
         // the url of the blogs page
         $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
         
         // add css
         $this->_add_css();
+                
+        // the default template
+        $default = 'blogs.categories.default.block.php';
         
-        // return html
-        return load_view('blogs.categories.block.template.php', $data);
+        // if using custom template
+        if ($arg[1])
+        {
+            // load the custom template
+            $template = 'blogs.categories.' . $arg[1] . '.block.php';
+            return load_view($template, $data, $default);
+        }
+        
+        // load the default template
+        return load_view($default, $data);
     }
     
     
     // recent blog post block
-    private function _get_recent_block()
+    private function _get_recent_block( $arg = array() )
     {
         // the url of the blogs page
         $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
@@ -181,8 +221,19 @@ class blogs extends controller
         // add css
         $this->_add_css();
         
-        // return html
-        return load_view('blogs.recent.block.template.php', $data);
+        // the default template
+        $default = 'blogs.recent.default.block.php';
+        
+        // if using custom template
+        if ($arg[1])
+        {
+            // load the custom template
+            $template = 'blogs.recent.' . $arg[1] . '.block.php';
+            return load_view($template, $data, $default);
+        }
+        
+        // load the default template
+        return load_view($default, $data);
     }
     
 }

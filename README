@@ -1,1 +1,77 @@
 CMS driven by MVC framework written in PHP
+
+
+
+
+LAYOUTS
+  Layouts are retreived from the "layouts.model.php". The values returned are used to find the layout file to use.
+  The string is created in the base "controller" class, by the public "parse_page_layout()" method.
+  
+  Page layouts have two parameters:
+    1) controller  defaults to the named constant "DEFAULT_CONTROLLER"
+    2) skin        defaults to the string literal "default"
+ 
+  examples:
+    pages.default.layout.php, pages.home.layout.php
+    blogs.default.layout.php, blogs.post.layout.php
+
+
+
+
+TEMPLATES
+  Templates are hard coded into the actual controller so there is no real naming convention.
+  
+  There are two types of templates:
+    1) Content templates
+        overrides the pages default [content] block
+        loaded through the controller's public "index()" method
+        examples:
+            pages.content.template.php, 
+            blogs.index.template.php, blogs.view.template.php
+    
+    2) Block tempates
+        block content added to the layout
+        loaded through the controller's public "get_block()" method
+        examples:
+            blocks.default.block.php, blocks.blue.block.php, 
+            blogs.subscribe.default.block.php, blogs.recent.default.block.php, blogs.recent.green.block.php
+
+
+
+BLOCKS
+  Block data is retreived from the "layouts.model.php" within the cells array.
+  The data is retreived in the base "controller" class, by the public "parse_page_layout()" method.
+  It's used to find and load the appropriate controller that'll load and return the block template.
+ 
+  Blocks have two parameters:
+    1) controller        controller to load - the method "get_block()" is always called
+    2) arguments         a string to pass to "get_block()"
+ 
+  examples:
+    '[blocks:6]',
+    '[forms:2]',
+    '[blogs:subscribe]', '[blogs:recent]', '[blogs:recent.green]', 
+    
+  The first parameter in the file name is the controller to load. Everything else is a parameter that gets
+  passed to the controller's public "get_block()" method.
+ 
+  The block '[blogs:recent]' will load the "blogs" controller and call the "blogs->get_block()" method 
+  which knows it needs to call the "blogs->_get_recent_block()" method. Then it'll load and return the
+  "blogs.recent.default.block.php" template file. The block '[blogs:recent.green]' will do the same 
+  but load and return the "blogs.recent.green.block.php" template file.
+
+
+
+
+
+LOAD_VIEW()
+  The following is an example of how the "load_view()" will attempt to locate a template file.
+    load_view:    'blocks.default.block.php'
+    1st attempt:  '/skins/APP/SKIN/blocks.default.block.php'
+    2nd attempt:  '/skins/APP/SKIN/templates/blocks.default.block.php'
+    3rd attempt:  '/skins/APP/SKIN/templates/blocks/default.block.php'
+
+  Some modules have a lot of extra content and block templates so this just makes it easy to organize them
+  by allowing anyone to just grab them all and throw them into their own folder. Remember to remove the
+  module name from the beginning of the template file name if they are in their own folder (3rd attempt).
+

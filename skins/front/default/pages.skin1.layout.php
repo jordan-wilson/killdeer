@@ -1,4 +1,3 @@
-<?= load_view('header.template.php'); ?>                    
     
     <div id="main">
         <div id="main_content">
@@ -30,8 +29,9 @@
             </div>
             
             <div class="row">
-            
-                <div class="span3"><!-- cell 3 -->
+                
+                <div class="span6"><!-- cell 3 -->
+                    
                     <?php if ($layout['cells'][3]) : ?>
                         <?php foreach( $layout['cells'][3] as $block ) : ?>
                             <?= $block; ?>
@@ -39,9 +39,11 @@
                     <?php else : ?>
                         <p>&nbsp;</p>
                     <?php endif; ?>
+                    
                 </div>
                 
-                <div class="span3"><!-- cell 4 -->
+                <div class="span6"><!-- cell 4 -->
+                    
                     <?php if ($layout['cells'][4]) : ?>
                         <?php foreach( $layout['cells'][4] as $block ) : ?>
                             <?= $block; ?>
@@ -49,26 +51,7 @@
                     <?php else : ?>
                         <p>&nbsp;</p>
                     <?php endif; ?>
-                </div>
-                
-                <div class="span3"><!-- cell 5 -->
-                    <?php if ($layout['cells'][5]) : ?>
-                        <?php foreach( $layout['cells'][5] as $block ) : ?>
-                            <?= $block; ?>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <p>&nbsp;</p>
-                    <?php endif; ?>
-                </div>
-                
-                <div class="span3"><!-- cell 6 -->
-                    <?php if ($layout['cells'][6]) : ?>
-                        <?php foreach( $layout['cells'][6] as $block ) : ?>
-                            <?= $block; ?>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <p>&nbsp;</p>
-                    <?php endif; ?>
+                    
                 </div>
                 
             </div>
@@ -76,4 +59,3 @@
         </div>
     </div>
     
-<?= load_view('footer.template.php'); ?>

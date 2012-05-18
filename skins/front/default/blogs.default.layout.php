@@ -1,4 +1,3 @@
-<?= load_view('header.template.php'); ?>
     
     <div id="main">
         <div id="main_content">
@@ -30,4 +29,3 @@
         </div>
     </div>
     
-<?= load_view('footer.template.php'); ?>

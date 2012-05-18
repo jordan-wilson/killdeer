@@ -3,31 +3,30 @@
 class blocks extends controller 
 {
     
-    public function get_block( $arg = '' )
+    public function get_block( $id = 0 )
     {
-        if (is_numeric($arg))
+        if ( ! is_numeric($id)) return '';
+        
+        // get block info
+        $blocks_model = load_model('blocks');
+        $data = $blocks_model->get_block($id);
+        
+        // if blog not found
+        if ( ! count($data)) return '';
+        
+        // the default template
+        $default = 'blocks.default.block.php';
+        
+        // if using custom template
+        if ($data['skin'] != '')
         {
-            // get block info
-            $blocks_model = load_model('blocks');
-            $data = $blocks_model->get_block($arg);
-            
-            if ( ! count($data)) return '';
-            
-            // the template to use for the block
-            $template = 'blocks.default.template.php';
-            if ($data['skin'] != '')
-            {
-                $skin = 'blocks.' . $data['skin'] . '.template.php';
-                $path = SITE_ROOT . '/skins/' . APP . '/' . $this->registry->skin . '/' . $skin;
-                if (file_exists($path))
-                    $template = $skin;
-            }
-            
-            // load block
-            return load_view($template, $data);
+            // load the custom template
+            $template = 'blocks.' . $data['skin'] . '.block.php';
+            return load_view($template, $data, $default);
         }
         
-        return '';
+        // load the default template
+        return load_view($default, $data);
     }
     
 }

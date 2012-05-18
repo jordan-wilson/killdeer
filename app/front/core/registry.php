@@ -12,15 +12,14 @@ class registry
     public $meta_keywords;
     public $meta_description;
     
-    public $modules;
-    public $page_data;
-    public $page_layout;
-    public $page_content;
+    public $modules;          // array of all page urls with modules
+    public $page_data;        // the default database info of the page
+    public $page_layout;      // the default layout of the page
+    public $page_content;     // the default content block for the page
         
     public function __construct()
     {
         $this->skin = DEFAULT_SKIN;
-        $this->main_template = DEFAULT_MAIN_TEMPLATE;
     }
     
     public function add_js($js) 

@@ -44,6 +44,12 @@ class blocks_model extends model
                 $arr['title'] = 'Block 6';
                 $arr['content'] = '<p>Donec id elit non mi porta gravida at eget metus. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>';
                 break;
+                
+            case 7:
+                $arr['skin'] = '';
+                $arr['title'] = 'Block 7';
+                $arr['content'] = '<p>Facebook Like</p><p>Twitter Retweet</p><p>Google Plus</p>';
+                break;
         }
         
         return $arr;
