@@ -1,0 +1,83 @@
+<xml>
+
+    <layout>
+        <name>Blogs landing page template</name>
+        <notes><![CDATA[This is the template for the Blog module. Cell 1 is completely locked. Nothing can be repositioned, removed or added to it. It will be appended with a list of blog post.]]></notes>
+        <controller>blogs</controller>
+        <skin>default</skin>
+        <cells>
+            <row>
+                <cell class="span9" protected="1">
+                    <block value="[content]" locked="1" />
+                </cell>
+                <cell class="span3">
+                    <block value="[blogs:subscribe]" />
+                    <block value="[blogs:categories]" />
+                    <block value="[blogs:recent]" />
+                </cell>
+            </row>
+        </cells>
+        <template>blogs.default.layout.php</template>
+    </layout>
+    
+    <layout>
+        <name>Blogs post page template</name>
+        <controller>blogs</controller>
+        <skin>post</skin>
+        <cells>
+            <row>
+                <cell class="span2"></cell>
+                <cell class="span7" protected="1">
+                    <block value="[content]" locked="1" />
+                </cell>
+                <cell class="span3">
+                    <block value="[blogs:subscribe]" />
+                    <block value="[blogs:categories]" />
+                    <block value="[blogs:recent]" />
+                </cell>
+            </row>
+        </cells>
+        <template>blogs.post.layout.php</template>
+    </layout>
+    
+    <blocks>
+        
+        <block>
+            <name>Blog post blurb</name>
+            <value>[blogs:#]</value>
+            <template>blogs.blog.default.block.php</template>
+        </block>
+        
+        <block>
+            <name>Full blog post</name>
+            <value>[blogs:#.full]</value>
+            <template>blogs.blog.full.block.php</template>
+        </block>
+        
+        <block>
+            <name>Blogs subscribe link</name>
+            <value>[blogs:subscribe]</value>
+            <template>blogs.subscribe.default.block.php</template>
+        </block>
+        
+        <block>
+            <name>List of top blog categories</name>
+            <value>[blogs:categories]</value>
+            <template>blogs.categories.default.block.php</template>
+        </block>
+        
+        <block>
+            <name>List of recent blog post</name>
+            <value>[blogs:recent]</value>
+            <template>blogs.recent.default.block.php</template>
+        </block>
+        
+        <block>
+            <name>List of recent blog post (green background)</name>
+            <value>[blogs:recent.green]</value>
+            <template>blogs.recent.green.block.php</template>
+        </block>
+        
+    </blocks>
+    
+</xml>

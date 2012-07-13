@@ -58,8 +58,6 @@ h6, .h6 {
 
 .page_content {
     margin-bottom: 20px;
-    padding: 5px;
-    background-color: #e0e0e0;
 }
 
 
@@ -69,33 +67,8 @@ h6, .h6 {
 /****** BLOCKS ******/
 .block {
     margin-bottom: 20px;
-    padding: 5px;
-    background-color: #e0e0e0;
 }
 .block h3 {}
-
-.block_html {
-    margin-bottom: 20px;
-    padding: 5px;
-    color: #fff;
-    background-color: #993399;
-}
-
-.block_blue {
-    margin-bottom: 20px;
-    padding: 5px;
-    color: #fff;
-    background-color: #2F96B4;
-}
-.block_blue h3 {}
-
-.block_green {
-    margin-bottom: 20px;
-    padding: 5px;
-    color: #fff;
-    background-color: #51A351
-}
-.block_green h3 {}
 
 
 

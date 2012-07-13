@@ -4,6 +4,8 @@
 .blogs_landing {}
 .blogs_landing .blogs_post {
     margin-bottom: 20px;
+    padding: 5px;
+    background-color: #e0e0e0;
 }
 .blogs_landing .blogs_post_name {}
 .blogs_landing .blog_post_name h2 {}
@@ -19,7 +21,10 @@
 
 /* individual blog post */
 .blogs_view {}
-.blogs_view .blogs_post {}
+.blogs_view .blogs_post {
+    padding: 5px;
+    background-color: #e0e0e0;
+}
 .blogs_view .blogs_post_name {}
 .blogs_view .blog_post_name h2 {}
 .blogs_view .blogs_post_date {
@@ -33,24 +38,32 @@
 /* blogs blocks */
 .blogs_blog_block {
     margin-bottom: 20px;
+    padding: 5px;
+    background-color: #e0e0e0;
 }
 .blogs_blog_full {
     margin-bottom: 20px;
-    padding: 10px;
+    padding: 5px;
     background-color: #EEE8AA;
 }
 .blogs_subscribe_block {
     margin-bottom: 20px;
+    padding: 5px;
+    background-color: #e0e0e0;
 }
 .blogs_categories_block {
     margin-bottom: 20px;
+    padding: 5px;
+    background-color: #e0e0e0;
 }
 .blogs_recent_block {
     margin-bottom: 20px;
+    padding: 5px;
+    background-color: #e0e0e0;
 }
 .blogs_recent_block2 {
     margin-bottom: 20px;
-    padding: 10px;
+    padding: 5px;
     color: #fff;
     background-color: #51A351;
 }

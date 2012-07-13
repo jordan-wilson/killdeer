@@ -1,0 +1,83 @@
+
+
+.layout_container {
+    width: 900px;
+    margin: 0 auto;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.pages_layout div[class*="span"] {
+    background-color: #f0f0f0;
+}
+
+.layout_cell {
+    padding: 10px;
+}
+
+.layout_sortable_cell {
+    min-height: 30px;
+}
+
+.layout_block {
+    margin-bottom: 5px;
+    padding: 10px;
+    border: 1px solid #eee;
+    background-color: #fefefe;
+}
+.layout_sortable_cell .layout_block {
+    cursor: pointer;
+}
+.layout_sortable_cell .layout_block:hover {
+    border: 1px solid #666;
+}
+
+.ui-sortable-placeholder {
+    margin-bottom: 5px;
+    padding: 10px;
+    border: 1px solid lightblue;
+    background-color: lightblue;
+}
+
+.layout_block_locked {
+    margin-bottom: 5px;
+    padding: 10px;
+    color: #999;
+    border: 1px solid #eee;
+    background-color: #ffdddd;
+    background-color: #fdfdfd;
+}
+
+.layout_block_add a {
+    cursor: pointer;
+    display:block;
+    padding: 5px;
+    color: #999;
+    font-weight: bold;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+.layout_block_add a:hover {
+    color: #333;
+    background-color: #fdfdfd;
+}
+
+.layout_block_add_disabled a {
+    cursor: default;
+    display:block;
+    padding: 5px;
+    color: #e0e0e0;
+    font-weight: bold;
+    text-align: center;
+    background-color: #f3f3f3;
+}
+.layout_block_add_disabled a:hover {
+    color: #e0e0e0;
+}
+
+
+
+
