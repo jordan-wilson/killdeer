@@ -9,7 +9,7 @@ class pages extends controller
         $this->registry->page_content = load_view('pages.content.template.php', $this->registry->page_data);
         
         // parse page layout
-        $this->parse_page_layout();
+        //$this->parse_page_layout();
         
         // if error page update header
         if ($this->registry->page_data['url'] == 'error')

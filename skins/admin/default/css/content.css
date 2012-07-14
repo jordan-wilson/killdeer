@@ -1,6 +1,6 @@
 
 
-/****** BASICS ******/
+/****** defaults ******/
 body {
 	color: #292929;
 	font-size: 13px;
@@ -62,9 +62,38 @@ h6, .h6 {
 
 
 
+/****** index table ******/
+.index_table {
+    width: 100%;
+    margin-bottom: 18px;
+    max-width: 100%;
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.index_table thead th {
+    color: #fff;
+    font-weight: bold;
+    vertical-align: bottom;
+    background-color: #999;
+}
+.index_table th,
+.index_table td {
+    padding: 8px;
+    text-align: left;
+    line-height: 18px;
+    vertical-align: top;
+    border-top: 1px solid #DDD;
+}
+.index_table tbody tr:nth-child(odd) td {
+    background-color: #F9F9F9;
+}
 
 
-/****** BLOCKS ******/
+
+
+
+/****** blocks ******/
 .block {
     margin-bottom: 20px;
 }

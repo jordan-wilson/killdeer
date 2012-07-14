@@ -6,49 +6,51 @@
     
     <div class="pages_edit">
     
-        <form id="form2" action="/admin/pages/edit/<?= $id; ?>/update" method="post">
+        <form action="/admin/pages/update_info/<?= $id; ?>" method="post">
             
             <div class="input_heading">Edit Page</div>
+            
+            <input type="hidden" name="id" value="<?= $id; ?>">
             
             <div class="input_container">
                 <label class="form_label">Name</label>
                 <div class="form_field">
-                    <input type="text" value="">
+                    <input type="text" name="name" value="<?= $name; ?>">
                 </div>
             </div>
             
             <div class="input_container">
                 <label class="form_label">URL</label>
                 <div class="form_field">
-                    <input type="text" value="<?= $name; ?>">
+                    <input type="text" name="url" value="<?= $url; ?>">
                 </div>
             </div>
             
             <div class="input_container">
                 <label class="form_label">Content</label>
                 <div class="form_field">
-                    <textarea><?= $content; ?></textarea>
+                    <textarea name="content"><?= $content; ?></textarea>
                 </div>
             </div>
             
             <div class="input_container">
                 <label class="form_label">Meta Title</label>
                 <div class="form_field">
-                    <input type="text" value="<?= $meta_title; ?>">
+                    <input type="text" name="meta_title" value="<?= $meta_title; ?>">
                 </div>
             </div>
             
             <div class="input_container">
                 <label class="form_label">Meta Keywords</label>
                 <div class="form_field">
-                    <input type="text" value="<?= $meta_keywords; ?>">
+                    <input type="text" name="meta_keywords" value="<?= $meta_keywords; ?>">
                 </div>
             </div>
             
             <div class="input_container">
                 <label class="form_label">Meta Description</label>
                 <div class="form_field">
-                    <textarea><?= $meta_description; ?></textarea>
+                    <textarea name="meta_description"><?= $meta_description; ?></textarea>
                 </div>
             </div>
             

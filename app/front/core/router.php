@@ -7,7 +7,7 @@ class router
     
     public function __construct()
     {   
-        // LOAD REGISTRY
+        // load registry
         $this->registry = load_core('registry');
         
         // default controller -> action
@@ -38,20 +38,20 @@ class router
     }
     
     
-    // get an array of the page info
+    // get the page info
     private function _parse_page()
     {
         $url = $this->registry->request_args[0];
         
         // get page info
         $pages_model = load_model('pages');
-        $data = $pages_model->get_page($url);
+        $data = $pages_model->get_page_from_url($url);
         
         // if page not found
         if ( ! count($data))
         {
             // get error page
-            $data = $pages_model->get_page('error');
+            $data = $pages_model->get_page_from_url('error');
             if ( ! count($data))
                 error_page();
         }
@@ -65,16 +65,19 @@ class router
         
         // get page layout
         $layouts_model = load_model('layouts');
-        $layout = $layouts_model->get_layout($data['layout']);
-        if ( ! count($layout))
-            exit('no layout data');
+        //$layout = $layouts_model->get_layout($data['layout']);
+        $layout = $layouts_model->get_layout_from_id($data['layout']);
         
-        // update page layout
-        $this->registry->page_layout = $layout;
+        // if the layout is an array
+        if (is_array($layout))
+        {
+            // update page layout (even if it's empty)
+            $this->registry->page_layout = $layout;
         
-        // update controller from layout
-        if ($layout['controller'] != '')
-            $this->registry->controller = $layout['controller'];
+            // update controller from layout
+            if ($layout['controller'] != '')
+                $this->registry->controller = $layout['controller'];
+        }
         
     }
     
@@ -88,8 +91,27 @@ class router
         // it'll store all the urls in the registry so anything can access them
         // ie: the blog block will first need to determine if there is a blog page
         // to link to - if not they don't return anything
+        //$arr = array();
+        //$arr['blogs'] = 'blog';
+        //$this->registry->modules = $arr;
+        
         $arr = array();
-        $arr['blogs'] = 'blog';
+        
+        // get list of unique controller layouts
+        $layouts_model = load_model('layouts');
+        $layouts = $layouts_model->get_controllers_list();
+        if (count($layouts))
+        {
+            // get the url of pages with these layouts
+            $pages_model = load_model('pages');
+            foreach($layouts as $key => $val)
+            {
+                $page_url = $pages_model->get_page_url_from_layout($val);
+                if ( ! empty($page_url))
+                    $arr[$key] = $page_url;
+            }
+        }
+        
         $this->registry->modules = $arr;
     }
     

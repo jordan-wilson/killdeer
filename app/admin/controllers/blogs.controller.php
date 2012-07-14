@@ -20,7 +20,7 @@ class blogs extends controller
     }
         
     
-    public function edit()
+    public function edit_info()
     {
         // get page id
         $request = $this->registry->request_args;
@@ -28,20 +28,37 @@ class blogs extends controller
         
         // get blogs data
         $blogs_model = load_model('blogs');
-        $data = $blogs_model->get_blog($id);
+        $data = $blogs_model->get_blog_from_id($id);
         
         // if data not found
         if ( ! count($data))
             error_page();
         
         // update content
-        $this->content = load_view('blogs.edit.template.php', $data);
+        $this->content = load_view('blogs.edit_info.template.php', $data);
         
         // add css
         $this->_add_css();
         
         // load layout
         $this->display();
+    }
+    
+    
+    // update blog info
+    public function update_info()
+    {
+        $input = load_core('input');
+        $post  = $input->post();
+        
+        // update pages info
+        $blogs_model = load_model('blogs');
+        $updated = $blogs_model->update_blog_info($post);
+        if ($updated === false)
+            echo 'There was a problem updating this blog.';
+        
+        // return to edit info page
+        $this->edit_info();
     }
     
     

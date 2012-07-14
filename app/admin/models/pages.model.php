@@ -3,6 +3,77 @@
 class pages_model extends model
 {
     
+    // get all pages
+    public function get_pages()
+    {
+        $arr = array();
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM pages ORDER BY name");
+            $stmt->execute();
+            if ($stmt->rowCount())
+            {
+                while ($result = $stmt->fetch())
+                {
+                    $arr[] = $result;
+                }
+            }
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    
+    // get the page from the id
+    public function get_page_from_id( $id = 0 )
+    {
+        $arr = array();
+        
+        if ( ! is_numeric($id))
+            return $arr;
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM pages WHERE id = :id LIMIT 1");
+            $stmt->execute( array(':id'=>$id) );
+            if ($stmt->rowCount())
+                $arr = $stmt->fetch();
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    
+    // update page info
+    public function update_page_info( $arr = array() )
+    {
+        if ( ! is_array($arr))
+            return false;
+        
+        try
+        {
+            extract($arr);
+            $stmt = $this->db->prepare("UPDATE pages SET name = :name, url = :url, content = :content, meta_title = :meta_title, meta_keywords = :meta_keywords, meta_description = :meta_description WHERE id = :id LIMIT 1");
+            $executed = $stmt->execute(array(
+                ':id'               => $id, 
+                ':name'             => $name, 
+                ':url'              => $url, 
+                ':content'          => $content, 
+                ':meta_title'       => $meta_title, 
+                ':meta_keywords'    => $meta_keywords, 
+                ':meta_description' => $meta_description
+            ));
+            return $executed;
+        }
+        catch(PDOException $e) { }
+        
+        return false;
+    }
+    
+    /*
     public function get_pages()
     {
         $arr = array();
@@ -84,5 +155,6 @@ class pages_model extends model
         
         return $arr;
     }
+    */
     
 }

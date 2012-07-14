@@ -1,6 +1,6 @@
 
 
-/****** CONTENT ******/
+/****** body ******/
 html, body {
 	height: 100%;
 }
@@ -13,7 +13,7 @@ body {
 
 
 
-/****** CONTAINER ******/
+/****** container ******/
 #container {
 	width: 100%;
     min-width: 900px;
@@ -24,7 +24,7 @@ body {
 
 
 
-/****** HEADER ******/
+/****** header ******/
 #header {
 	width: 100%;
     background-color: #fff
@@ -47,7 +47,7 @@ body {
 
 
 
-/****** MAIN ******/
+/****** main ******/
 #main {
 	width: 100%;
     background-color: #fff;
@@ -61,7 +61,7 @@ body {
 
 
 
-/****** FOOTER ******/
+/****** footer ******/
 #footer {
 	width: 100%;
     background-color: #fff

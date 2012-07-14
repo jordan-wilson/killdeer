@@ -6,10 +6,10 @@ if ( ! defined('APP')) exit;
 date_default_timezone_set('America/New_York');
 
 // DATABASE SETTINGS
-define('DB_HOST', '');
-define('DB_USER', '');
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', '');
+define('DB_NAME', 'killdeer');
 
 // IMAGE SETTINGS
 define('IMG_MAX_WIDTH', 1090);

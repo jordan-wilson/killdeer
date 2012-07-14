@@ -3,6 +3,78 @@
 class blogs_model extends model
 {
     
+    // get all blogs
+    public function get_blogs()
+    {
+        $arr = array();
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM blogs ORDER BY date DESC");
+            $stmt->execute();
+            if ($stmt->rowCount())
+            {
+                while ($result = $stmt->fetch())
+                {
+                    $arr[] = $result;
+                }
+            }
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    
+    // get the blog from the id
+    public function get_blog_from_id( $id = 0 )
+    {
+        $arr = array();
+        
+        if ( ! is_numeric($id))
+            return $arr;
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM blogs WHERE id = :id LIMIT 1");
+            $stmt->execute( array(':id'=>$id) );
+            if ($stmt->rowCount())
+                $arr = $stmt->fetch();
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    
+    // update blog info
+    public function update_blog_info( $arr = array() )
+    {
+        if ( ! is_array($arr))
+            return false;
+        
+        try
+        {
+            extract($arr);
+            $stmt = $this->db->prepare("UPDATE blogs SET name = :name, date = :date, url = :url, content = :content, meta_title = :meta_title, meta_keywords = :meta_keywords, meta_description = :meta_description WHERE id = :id LIMIT 1");
+            $executed = $stmt->execute(array(
+                ':id'               => $id, 
+                ':name'             => $name, 
+                ':date'             => $date, 
+                ':url'              => $url, 
+                ':content'          => $content, 
+                ':meta_title'       => $meta_title, 
+                ':meta_keywords'    => $meta_keywords, 
+                ':meta_description' => $meta_description
+            ));
+            return $executed;
+        }
+        catch(PDOException $e) { }
+        
+        return false;
+    }
+    
+    /*
     public function get_blogs()
     {
         $arr = array();
@@ -14,7 +86,6 @@ class blogs_model extends model
         
         return $arr;
     }
-    
     
     public function get_blog( $id = 0 )
     {
@@ -77,5 +148,6 @@ class blogs_model extends model
         
         return $arr;
     }
+    */
     
 }

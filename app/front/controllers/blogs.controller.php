@@ -30,7 +30,10 @@ class blogs extends controller
         }
         
         // parse page layout
-        $this->parse_page_layout();
+        //$this->parse_page_layout();
+        
+        // add css
+        $this->_add_css();
         
         // output the page
         $this->display();
@@ -42,10 +45,10 @@ class blogs extends controller
     {
         // get recent blogs
         $blogs_model = load_model('blogs');
-        $data['blogs'] = $blogs_model->get_landing();
+        $data['blogs'] = $blogs_model->get_blogs(0, 10);
         
         // add css
-        $this->_add_css();
+        //$this->_add_css();
         
         // return html
         return load_view('blogs.index.template.php', $data);
@@ -57,7 +60,7 @@ class blogs extends controller
     {
         // get blog data
         $blogs_model = load_model('blogs');
-        $data['blog'] = $blogs_model->get_view($url);
+        $data['blog'] = $blogs_model->get_blog_from_url($url);
         
         // if blog not found
         if ( ! $data['blog'])
@@ -71,14 +74,15 @@ class blogs extends controller
         
         // get blog layout
         $layouts_model = load_model('layouts');
-        $layout = $layouts_model->get_layout($data['blog']['layout']);
+        //$layout = $layouts_model->get_layout($data['blog']['layout']);
+        $layout = $layouts_model->get_layout_from_id($data['blog']['layout']);
         
         // update page layout
         if (count($layout))
             $this->registry->page_layout = $layout;
         
         // add css
-        $this->_add_css();
+        //$this->_add_css();
         
         // return html
         return load_view('blogs.view.template.php', $data);
@@ -98,142 +102,89 @@ class blogs extends controller
         if ( ! $this->registry->modules['blogs'])
             return '';
         
-        // splite the argument into an array by '.'
+        // split the argument into an array by '.'
         $arg = explode('.', $arg);
         
+        // find the method to call based on the arugements
+        $block = is_numeric($arg[0]) ? 'blog' : $arg[0];
+        $method = '_get_' . $block . '_block';
         
-        // individual blog block
-        if (is_numeric($arg[0]))
+        // check for the method that returns the requested data
+        if ( ! method_exists($this, $method))
+            return '';
+        
+        // get the data
+        $data = $this->$method($arg);
+        
+        // check if anything was returned
+        if ( ! count($data))
+            return '';
+        
+        // get the url of the blogs page
+        $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
+        
+        // add css
+        $this->_add_css();
+        
+        // the default block template
+        $default = 'blogs.' . $block . '.default.block.php';
+        
+        // if using custom template
+        if ($arg[1])
         {
-            return $this->_get_blog_block($arg);
+            // load the custom template
+            // load the default template if its not found
+            $template = 'blogs.' . $block . '.' . $arg[1] . '.block.php';
+            return load_view($template, $data, $default);
         }
         
-        // subscribe block
-        elseif ($arg[0] == 'subscribe')
-        {
-            return $this->_get_subscribe_block($arg);
-        }
-        
-        // recent blog post block
-        elseif ($arg[0] == 'recent')
-        {
-            return $this->_get_recent_block($arg);
-        }
-        
-        // blog categories block
-        elseif ($arg[0] == 'categories')
-        {
-            return $this->_get_categories_block($arg);
-        }
-        
-        return '';
+        // load the default template
+        return load_view($default, $data);
     }
     
     
     // individual blog block
     private function _get_blog_block( $arg = array() )
     {
-        // the url of the blogs page
-        $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
-        
         // get blog info
         $blogs_model = load_model('blogs');
-        $data['blog'] = $blogs_model->get_blog($arg[0]);
+        $data['blog'] = $blogs_model->get_blog_from_id($arg[0]);
         
-        // if blog not found
-        if ( ! $data['blog']) return '';
-        
-        // add css
-        $this->_add_css();
-        
-        // the default template
-        $default = 'blogs.blog.default.block.php';
-        
-        // if using custom template
-        if ($arg[1])
-        {
-            // load the custom template
-            $template = 'blogs.blog.' . $arg[1] . '.block.php';
-            return load_view($template, $data, $default);
-        }
-        
-        // load the default template
-        return load_view($default, $data);
+        return $data;
     }
     
     
     // subscribe block
     private function _get_subscribe_block( $arg = array() )
     {
-        // the url of the blogs page
-        $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
+        // if can subscribe
+        $data['subscribe'] = true;
         
-        // add css
-        $this->_add_css();
-        
-        // the default template
-        $default = 'blogs.subscribe.default.block.php';
-        
-        // if using custom template
-        if ($arg[1])
-        {
-            // load the custom template
-            $template = 'blogs.subscribe.' . $arg[1] . '.block.php';
-            return load_view($template, $data, $default);
-        }
-        
-        // load the default template
-        return load_view($default, $data);
+        return $data;
     }
     
     
     // categories block
     private function _get_categories_block( $arg = array() )
     {
-        // the url of the blogs page
-        $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
+        // get blog category data
+        $data['category'] = 'some data here';
         
-        // add css
-        $this->_add_css();
-                
-        // the default template
-        $default = 'blogs.categories.default.block.php';
-        
-        // if using custom template
-        if ($arg[1])
-        {
-            // load the custom template
-            $template = 'blogs.categories.' . $arg[1] . '.block.php';
-            return load_view($template, $data, $default);
-        }
-        
-        // load the default template
-        return load_view($default, $data);
+        return $data;
     }
     
     
     // recent blog post block
     private function _get_recent_block( $arg = array() )
     {
-        // the url of the blogs page
-        $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
+        // get recent blogs
+        $blogs_model = load_model('blogs');
+        $data['blogs'] = $blogs_model->get_blogs(0, 2);
         
         // add css
         $this->_add_css();
         
-        // the default template
-        $default = 'blogs.recent.default.block.php';
-        
-        // if using custom template
-        if ($arg[1])
-        {
-            // load the custom template
-            $template = 'blogs.recent.' . $arg[1] . '.block.php';
-            return load_view($template, $data, $default);
-        }
-        
-        // load the default template
-        return load_view($default, $data);
+        return $data;
     }
     
 }

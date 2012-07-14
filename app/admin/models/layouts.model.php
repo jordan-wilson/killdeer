@@ -3,6 +3,50 @@
 class layouts_model extends model
 {
     
+    // get all layouts
+    public function get_layouts()
+    {
+        $arr = array();
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM layouts ORDER BY name");
+            $stmt->execute();
+            if ($stmt->rowCount())
+            {
+                while ($result = $stmt->fetch())
+                {
+                    $arr[] = $result;
+                }
+            }
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    
+    // get the layout from the id
+    public function get_layout_from_id( $id = 0 )
+    {
+        $arr = array();
+        
+        if ( ! is_numeric($id))
+            return $arr;
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM layouts WHERE id = :id LIMIT 1");
+            $stmt->execute( array(':id'=>$id) );
+            if ($stmt->rowCount())
+                $arr = $stmt->fetch();
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    /*
     public function get_layout( $id = 0 )
     {
         $arr = array();
@@ -93,5 +137,6 @@ class layouts_model extends model
         
         return $arr;
     }
+    */
     
 }

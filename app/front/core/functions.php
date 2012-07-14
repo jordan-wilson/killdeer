@@ -1,5 +1,49 @@
 <?php
 
+//
+// OUTPUT READABLE ARRAY
+//
+if ( ! function_exists('printr'))
+{
+    function printr( $val )
+    {
+        if (is_array($val))
+            return '<pre>' . print_r($val, true) . '</pre>';
+        return $val;
+    }
+}
+
+
+
+//
+// PARSE CELL INTO STRING
+//
+if ( ! function_exists('parse_cell'))
+{
+    function parse_cell( $layout = array(), $idx = 0, $content = false )
+    {
+        $html = '<p>&nbsp;</p>';
+        
+        // if layout contains cells data
+        if ($layout['cells'])
+        {
+            if (count($layout['cells'][$idx]))
+            {
+                $html = join('', $layout['cells'][$idx]);
+            }
+        }
+        // else, if this cell should contain the content
+        elseif ($content)
+        {
+            $registry = load_core('registry');
+            $html = $registry->page_content;
+        }
+        
+        return $html;
+    }
+}
+
+
 
 //
 // LOAD CORE CLASS

@@ -3,6 +3,76 @@
 class blogs_model extends model
 {
     
+    // get all blogs
+    public function get_blogs( $start = 0, $perpage = 10 )
+    {
+        $arr = array();
+        
+        $start   = is_int($start)   ? $start   : 0;
+        $perpage = is_int($perpage) ? $perpage : 10;
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM blogs ORDER BY date DESC LIMIT :start, :perpage");
+            $stmt->bindValue(':start',   (int) $start,   PDO::PARAM_INT);
+            $stmt->bindValue(':perpage', (int) $perpage, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount())
+            {
+                while ($result = $stmt->fetch())
+                {
+                    $arr[] = $result;
+                }
+            }
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    
+    // get the blog from the url
+    public function get_blog_from_url( $url = '' )
+    {
+        $arr = array();
+        
+        if (empty($url))
+            return $arr;
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM blogs WHERE url = :url LIMIT 1");
+            $stmt->execute( array(':url'=>$url) );
+            if ($stmt->rowCount())
+                $arr = $stmt->fetch();
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    
+    // get the blog from the id
+    public function get_blog_from_id( $id = 0 )
+    {
+        $arr = array();
+        
+        if ( ! is_numeric($id))
+            return $arr;
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM blogs WHERE id = :id LIMIT 1");
+            $stmt->execute( array(':id'=>$id) );
+            if ($stmt->rowCount())
+                $arr = $stmt->fetch();
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    /*
     public function get_landing()
     {
         $arr = array();
@@ -89,5 +159,6 @@ class blogs_model extends model
         
         return false;
     }
+    */
 
 }

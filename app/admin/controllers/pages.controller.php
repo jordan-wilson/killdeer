@@ -3,6 +3,7 @@
 class pages extends controller 
 {
     
+    // the landing page
     public function index()
     {
         // get list of pages
@@ -20,7 +21,8 @@ class pages extends controller
     }
     
     
-    public function edit()
+    // edit the page info
+    public function edit_info()
     {
         // get page id
         $request = $this->registry->request_args;
@@ -28,14 +30,14 @@ class pages extends controller
         
         // get pages data
         $pages_model = load_model('pages');
-        $data = $pages_model->get_page($id);
+        $data = $pages_model->get_page_from_id($id);
         
         // if data not found
         if ( ! count($data))
             error_page();
         
         // update content
-        $this->content = load_view('pages.edit.template.php', $data);
+        $this->content = load_view('pages.edit_info.template.php', $data);
         
         // add css
         $this->_add_css();
@@ -45,36 +47,20 @@ class pages extends controller
     }
     
     
-    public function layout()
+    // update page info
+    public function update_info()
     {
-        // get page id
-        $request = $this->registry->request_args;
-        $id = $request[0];
+        $input = load_core('input');
+        $post  = $input->post();
         
-        // get pages data
+        // update pages info
         $pages_model = load_model('pages');
-        $data = $pages_model->get_page($id);
+        $updated = $pages_model->update_page_info($post);
+        if ($updated === false)
+            echo 'There was a problem updating this page.';
         
-        // if data not found
-        if ( ! count($data))
-            error_page();
-        
-        // get layouts data
-        $layouts_model = load_model('layouts');
-        $data['layout'] = $layouts_model->get_layout($data['layout']);
-        
-        // update content
-        $this->content = load_view('pages.layout.template.php', $data);
-        
-        // add css/js
-        $this->_add_css();
-        $this->_add_js();
-        
-        // update layout
-        $this->main_layout = 'pages.layout.layout.php';
-        
-        // load layout
-        $this->display();
+        // return to edit info page
+        $this->edit_info();
     }
     
     
@@ -82,16 +68,13 @@ class pages extends controller
     {
         $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/pages.css';
         $this->registry->add_css_by_url($css);
-        
-        $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/layouts.css';
-        $this->registry->add_css_by_url($css);
     }
     
     
-    private function _add_js()
-    {
-        $js = '/skins/' . APP . '/' . $this->registry->skin . '/js/layouts.js';
-        $this->registry->add_js_by_url($js);
-    }
+    //private function _add_js()
+    //{
+        //$js = '/skins/' . APP . '/' . $this->registry->skin . '/js/pages.js';
+        //$this->registry->add_js_by_url($js);
+    //}
     
 }

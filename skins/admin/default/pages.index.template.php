@@ -8,7 +8,7 @@
         
         <?php if (count($pages)) : ?>
             
-            <table class="pages_index_table">
+            <table class="index_table pages_index_table">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -23,8 +23,9 @@
                         <tr>
                             <td><?= $page['name']; ?></td>
                             <td><?= $page['url']; ?></td>
-                            <td><a href="/admin/pages/layout/<?= $page['id']; ?>">Layout</a></td>
-                            <td><a href="/admin/pages/edit/<?= $page['id']; ?>">Edit</a></td>
+                            <!--td><a href="/admin/pages/layout/<?= $page['id']; ?>">Layout</a></td-->
+                            <td><a href="/admin/layouts/edit/<?= $page['layout']; ?>">Layout</a></td>
+                            <td><a href="/admin/pages/edit_info/<?= $page['id']; ?>">Edit</a></td>
                         </tr>
                     
                     <?php endforeach; ?>

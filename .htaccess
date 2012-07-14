@@ -30,15 +30,15 @@ RewriteBase /
 # ----------------------------------------------------------------------
 # SET APPLICATION GATEWAY FILES
 # ----------------------------------------------------------------------
+# OTHER APPS
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin/(.*)$ admin.php?req=$1 [L,QSA]
+
 # DEFAULT APP
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?req=$1 [L,QSA]
-
-# OTHER APPS
-# RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteCond %{REQUEST_FILENAME} !-d
-# RewriteRule ^admin/(.*)$ admin.php?req=$1 [L,QSA]
 
 # ----------------------------------------------------------------------
 # PHP SETTINGS

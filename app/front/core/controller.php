@@ -3,8 +3,6 @@
 class controller
 {
     
-    protected $layout;
-    
     public function __construct()
     {
         // get loaded classes and assign them to this object
@@ -38,43 +36,60 @@ class controller
             $this->layout_template = $layout_template;
             $this->default_layout_template = DEFAULT_LAYOUT_TEMPLATE;
             
-            
-            // load block content into each cell of the layout
-            foreach($layout['cells'] as $i => $cell)
+            // if there is cell data
+            if ( ! empty($layout['cells']))
             {
-                foreach($cell as $j => $block)
+                $layout['cells'] = json_decode($layout['cells']);
+                array_unshift($layout['cells'], array());
+            
+                // load block content into each cell of the layout
+                if (is_array($layout['cells']))
                 {
-                    $html = $block;
-                    
-                    // if regular page content
-                    if ($block == '[content]')
+                    foreach($layout['cells'] as $i => $cell)
                     {
-                        $html = $this->registry->page_content;
-                    }
-                    
-                    // else, try and look for modular content
-                    else
-                    {
-                        // IF   $block   = '[forms:1]'
-                        // THEN $matches = array('[forms:1]', 'forms', '1')
-                        $matches = array();
-                        preg_match('/^\[(.*):(.*)\]$/', $block, $matches);
-                        if (count($matches) == 3)
+                        foreach($cell as $j => $block)
                         {
-                            $controller = load_controller($matches[1]);
-                            if ($controller)
+                            $view = '';
+                            
+                            // if regular page content
+                            if ($block == '[content]')
                             {
-                                if (method_exists($controller, 'get_block'))
+                                $view = $this->registry->page_content;
+                            }
+                            
+                            // else, try and load modular content
+                            else
+                            {
+                                // IF   $block   = '[forms:1]'
+                                // THEN $matches = array('[forms:1]', 'forms', '1')
+                                $matches = array();
+                                preg_match('/^\[(.*):(.*)\]$/', $block, $matches);
+                                if (count($matches) == 3)
                                 {
-                                    $html = $controller->get_block($matches[2]);
+                                    $controller = load_controller($matches[1]);
+                                    if ($controller)
+                                    {
+                                        if (method_exists($controller, 'get_block'))
+                                        {
+                                            $view = $controller->get_block($matches[2]);
+                                        }
+                                    }
                                 }
                             }
+                            
+                            // if view is still blank then it's an html block
+                            if ($view == '')
+                            {
+                                $data = array('content' => $block);
+                                $view = load_view(HTML_BLOCK_TEMPLATE, $data);
+                            }
+                            
+                            // update cell's block content
+                            $layout['cells'][$i][$j] = $view;
                         }
                     }
-                    
-                    // update cell content
-                    $layout['cells'][$i][$j] = $html;
                 }
+                
             }
         }
         
@@ -84,21 +99,18 @@ class controller
     
     public function display()
     {
-        if ( ! isset($this->registry->page_layout))
-        {
-            exit('Layout not yet initialized');
-        }
-        else
-        {
-            // load header
-            echo load_view($this->header_template);
-            
-            // load layout (with default fallback)
-            $data = array('layout' => $this->registry->page_layout);
-            echo load_view($this->layout_template, $data, $this->default_layout_template);
-            
-            // load footer
-            echo load_view($this->footer_template);
-        }
+        // parse page layout
+        $this->parse_page_layout();
+        
+        // load header
+        echo load_view($this->header_template);
+        
+        // load layout (with default fallback)
+        $data = array('layout' => $this->registry->page_layout);
+        echo load_view($this->layout_template, $data, $this->default_layout_template);
+        
+        // load footer
+        echo load_view($this->footer_template);
     }
+    
 }

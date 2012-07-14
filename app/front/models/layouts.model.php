@@ -21,6 +21,49 @@ class layouts_model extends model
         whatever gets returned.
     */
     
+    // get the layout from the id
+    public function get_layout_from_id( $id = 0 )
+    {
+        $arr = array();
+        
+        if ( ! is_numeric($id))
+            return $arr;
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM layouts WHERE id = :id LIMIT 1");
+            $stmt->execute( array(':id'=>$id) );
+            if ($stmt->rowCount())
+                $arr = $stmt->fetch();
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    // get unique controller types
+    public function get_controllers_list()
+    {
+        $arr = array();
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT id, controller FROM layouts WHERE controller != '' AND skin = ''");
+            $stmt->execute();
+            if ($stmt->rowCount())
+            {
+                while ($result = $stmt->fetch())
+                {
+                    $arr[$result['controller']] = $result['id'];
+                }
+            }
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    /*
     public function get_layout( $id = 0 )
     {
         $arr = array();
@@ -33,7 +76,7 @@ class layouts_model extends model
                     'skin' => 'home',
                     'cells' => array(
                         1 => array('[content]'),
-                        2 => array('[blocks:2]'),
+                        2 => array('[blocks:2]', '[blocks:6]'),
                         3 => array('[blogs:4]'),
                         4 => array('[forms:2]'),
                         5 => array('[blogs:recent]'),
@@ -101,17 +144,19 @@ class layouts_model extends model
                 );
                 break;
             
-            default: // default layout for pages without one
-                $arr = array(
-                    'controller' => '',
-                    'skin' => '',
-                    'cells' => array(
-                        1 => array('[content]')
-                    )
-                );
+            // there are enough fallbacks that this doesn't even matter
+            //default: // default layout for pages without one
+                //$arr = array(
+                    //'controller' => '',
+                    //'skin' => '',
+                    //'cells' => array(
+                        //1 => array('[content]')
+                    //)
+                //);
         }
         
         return $arr;
     }
+    */
     
 }

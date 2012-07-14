@@ -2,8 +2,53 @@
 
 class pages_model extends model
 {
-
-    public function get_page( $url = '' )
+    
+    // get the page from the url
+    public function get_page_from_url( $url = '' )
+    {
+        $arr = array();
+        
+        if ( $url == '' )
+            return $arr;
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT * FROM pages WHERE url = :url AND enabled LIMIT 1");
+            $stmt->execute( array(':url'=>$url) );
+            if ($stmt->rowCount())
+                $arr = $stmt->fetch();
+        }
+        catch(PDOException $e) { }
+        
+        return $arr;
+    }
+    
+    // get the page url from the layout id
+    public function get_page_url_from_layout( $layout = 0 )
+    {
+        $url = '';
+        
+        if ( ! is_numeric($layout) )
+            return $url;
+        
+        try
+        {     
+            $stmt = $this->db->prepare("SELECT url FROM pages WHERE layout = :layout AND enabled LIMIT 1");
+            $stmt->execute( array(':layout'=>$layout) );
+            if ($stmt->rowCount())
+            {
+                $result = $stmt->fetch();
+                if ( ! empty($result['url']))
+                    $url = $result['url'];
+            }
+        }
+        catch(PDOException $e) { }
+        
+        return $url;
+    }
+    
+    /*
+    public function get_page_from_url( $url = '' )
     {
         $arr = array();
         
@@ -62,5 +107,6 @@ class pages_model extends model
         
         return $arr;
     }
+    */
     
 }

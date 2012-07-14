@@ -8,12 +8,13 @@
         
         <?php if (count($blogs)) : ?>
             
-            <table class="blogs_index_table">
+            <table class="index_table blogs_index_table">
                 <thead>
                     <tr>
                         <th>Date</th>
                         <th>Name</th>
                         <th>URL</th>
+                        <th width="50px"></th>
                         <th width="50px"></th>
                     </tr>
                 </thead>
@@ -23,7 +24,12 @@
                         <td><?= date('M d, Y', $blog['date']); ?></td>
                         <td><?= $blog['name']; ?></td>
                         <td><?= $blog['url']; ?></td>
-                        <td><a href="/admin/blogs/edit/<?= $blog['id']; ?>">Edit</a></td>
+                        <td>
+                            <?php if ($blog['layout'] != 0) : ?>
+                                <a href="/admin/layouts/edit/<?= $blog['layout']; ?>">Layout</a></td>
+                            <?php endif; ?>
+                        </td>
+                        <td><a href="/admin/blogs/edit_info/<?= $blog['id']; ?>">Edit</a></td>
                     </tr>
                 
                 <?php endforeach; ?>
