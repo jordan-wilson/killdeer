@@ -3,19 +3,37 @@
 class blogs_model extends model
 {
     
+    // get the total number of blogs
+    public function get_total_number_of_blogs()
+    {
+        $total = 0;
+        
+        try
+        {
+            $stmt = $this->db->prepare("SELECT id FROM blogs WHERE date < :now AND enabled");
+            $stmt->execute( array(':now'=>time()) );
+            $total = $stmt->rowCount();
+        }
+        catch(PDOException $e) {echo $e; }
+        
+        return $total;
+    }
+    
+    
     // get all blogs
     public function get_blogs( $start = 0, $perpage = 10 )
     {
         $arr = array();
         
-        $start   = is_int($start)   ? $start   : 0;
-        $perpage = is_int($perpage) ? $perpage : 10;
+        $start   = is_numeric($start)   ? $start   : 0;
+        $perpage = is_numeric($perpage) ? $perpage : 10;
         
         try
         {     
-            $stmt = $this->db->prepare("SELECT * FROM blogs ORDER BY date DESC LIMIT :start, :perpage");
+            $stmt = $this->db->prepare("SELECT * FROM blogs WHERE date < :now AND enabled ORDER BY date DESC LIMIT :start, :perpage");
             $stmt->bindValue(':start',   (int) $start,   PDO::PARAM_INT);
             $stmt->bindValue(':perpage', (int) $perpage, PDO::PARAM_INT);
+            $stmt->bindValue(':now',     time(),         PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount())
             {

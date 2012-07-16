@@ -13,7 +13,7 @@
                 <div class="blogs_post">
                     
                     <div class="blogs_post_name">
-                        <h2><?= $blog['name']; ?></h2>
+                        <h2><?= $blog['id'] . ' ' . $blog['name']; ?></h2>
                     </div>
                     
                     <div class="blogs_post_date">
@@ -31,6 +31,25 @@
                 
             <?php endforeach; ?>
         </div>
+        
+        <?php if ( $older_page != '' || $newer_page != '' ) : ?>
+            <div class="blogs_paginate">
+                
+                <?php if ( $older_page != '' ) : ?>
+                    <div class="blogs_paginate_older">
+                        <a href="<?= $older_page; ?>">Older Post</a>
+                    </div>
+                <?php endif; ?>
+                
+                <?php if ( $newer_page != '' ) : ?>
+                    <div class="blogs_paginate_newer">
+                        <a href="<?= $newer_page; ?>">Newer Post</a>
+                    </div>
+                <?php endif; ?>
+                
+                <div class="clear"></div>
+            </div>
+        <?php endif; ?>
     
     <?php else: ?>
         <p>No blogs have been posted yet.</p>

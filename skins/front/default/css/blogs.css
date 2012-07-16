@@ -1,6 +1,6 @@
 
 
-/* blogs landing page */
+/****** blogs landing page ******/
 .blogs_landing {}
 .blogs_landing .blogs_post {
     margin-bottom: 20px;
@@ -19,7 +19,8 @@
 .blogs_landing .blogs_post_link {}
 
 
-/* individual blog post */
+
+/****** individual blog post ******/
 .blogs_view {}
 .blogs_view .blogs_post {
     padding: 5px;
@@ -35,7 +36,8 @@
     
 
 
-/* blogs blocks */
+
+/****** blog blocks ******/
 .blogs_blog_block {
     margin-bottom: 20px;
     padding: 5px;
@@ -69,5 +71,20 @@
 }
 .blogs_recent_block2 a {
     color: #fff !important;
+}
+
+
+
+/****** pagination ******/
+.blogs_paginate {
+    margin-bottom: 20px;
+    padding: 5px;
+    background-color: #e0e0e0;
+}
+.blogs_paginate_older {
+    float: left;
+}
+.blogs_paginate_newer {
+    float: right;
 }
 

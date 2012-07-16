@@ -1,0 +1,31 @@
+<xml>
+
+    <blocks>
+        
+        <block>
+            <name>HTML Block</name>
+            <skin>html</skin>
+            <template>blocks.html.block.php</template>
+        </block>
+        
+        <block>
+            <name>Default Block</name>
+            <skin>default</skin>
+            <template>blocks.default.block.php</template>
+        </block>
+        
+        <block>
+            <name>Blue Block</name>
+            <skin>blue</skin>
+            <template>blocks.blue.block.php</template>
+        </block>
+        
+        <block>
+            <name>Green Block</name>
+            <skin>green</skin>
+            <template>blocks.green.block.php</template>
+        </block>
+        
+    </blocks>
+    
+</xml>

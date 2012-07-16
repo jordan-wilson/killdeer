@@ -3,9 +3,14 @@
 class blogs extends controller 
 {
     
+    private $blogs_perpage = 5;
+    private $blogs_start   = 0;
+    private $newer_page     = '';
+    private $older_page     = '';
+    
     public function index()
     {
-        // update page content
+        // update page content depending on url request
         $request = $this->registry->request_args;
         if (count($request) == 1)
         {
@@ -29,9 +34,6 @@ class blogs extends controller
             exit();
         }
         
-        // parse page layout
-        //$this->parse_page_layout();
-        
         // add css
         $this->_add_css();
         
@@ -43,12 +45,14 @@ class blogs extends controller
     // blogs landing page
     private function _index()
     {
-        // get recent blogs
-        $blogs_model = load_model('blogs');
-        $data['blogs'] = $blogs_model->get_blogs(0, 10);
+        // blog pagination
+        $this->_blog_pagination();
+        $data['newer_page'] = $this->newer_page;
+        $data['older_page'] = $this->older_page;
         
-        // add css
-        //$this->_add_css();
+        // get blogs within range
+        $blogs_model = load_model('blogs');
+        $data['blogs'] = $blogs_model->get_blogs( $this->blogs_start, $this->blogs_perpage );
         
         // return html
         return load_view('blogs.index.template.php', $data);
@@ -74,18 +78,71 @@ class blogs extends controller
         
         // get blog layout
         $layouts_model = load_model('layouts');
-        //$layout = $layouts_model->get_layout($data['blog']['layout']);
         $layout = $layouts_model->get_layout_from_id($data['blog']['layout']);
         
         // update page layout
         if (count($layout))
             $this->registry->page_layout = $layout;
         
-        // add css
-        //$this->_add_css();
-        
         // return html
         return load_view('blogs.view.template.php', $data);
+    }
+    
+    
+    // the pagination for the blog landing page
+    private function _blog_pagination()
+    {
+        $input = load_core('input');
+        
+        // get current page
+        $pg = 1;
+        if ( $input->get('pg') )
+        {
+            $pg = $input->get('pg');
+            $pg = is_numeric($pg) ? round($pg) : 1;
+            $pg = ($pg < 1) ? 1 : $pg;
+        }
+        
+        // get total number of blogs
+        $blogs_model = load_model('blogs');
+        $total_blogs = $blogs_model->get_total_number_of_blogs();
+        
+        if ( $total_blogs )
+        {
+            // get blogs per page and total pages
+            $perpage = $this->blogs_perpage;
+            $total_pages = ceil($total_blogs / $perpage);
+            
+            // if there are multiple pages
+            if ( $total_pages > 1)
+            {
+                if ($pg > $total_pages)
+                    $pg = $total_pages;
+                
+                // blog to start on
+                $this->blogs_start = ($pg - 1) * $perpage;
+                
+                // set previous and next page
+                $newer_page = ($pg - 1);
+                $older_page = ($pg + 1);
+                
+                $blog_page_link = $this->registry->page_data['url'];
+                
+                if ($newer_page > 1)
+                    $this->newer_page = $blog_page_link . '?pg=' . $newer_page;
+                
+                if ($newer_page == 1)
+                    $this->newer_page = $blog_page_link;
+                    
+                if ($older_page <= $total_pages)
+                    $this->older_page = $blog_page_link . '?pg=' . $older_page;
+                
+                //$this->registry->page_data = $data;
+                //$data['link'] = '/' . $this->registry->modules['blogs'] . '/';
+                
+            }
+        }
+        
     }
     
     

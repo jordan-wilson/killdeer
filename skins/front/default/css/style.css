@@ -1,6 +1,6 @@
 
 
-/****** CONTENT ******/
+/****** defaults ******/
 html, body {
 	height: 100%;
 }
@@ -10,10 +10,14 @@ body {
 	background-color: #ddd;
 }
 
+div.clear {
+    clear: both;
+}
 
 
 
-/****** CONTAINER ******/
+
+/****** container ******/
 #container {
 	width: 1000px;
 	margin: 0px auto;
@@ -29,7 +33,7 @@ body {
 
 
 
-/****** HEADER ******/
+/****** header ******/
 #header {
 	width: 100%;
     background-color: #fff
@@ -52,7 +56,7 @@ body {
 
 
 
-/****** MAIN ******/
+/****** main ******/
 #main {
 	width: 100%;
     background-color: #fff;
@@ -66,7 +70,7 @@ body {
 
 
 
-/****** FOOTER ******/
+/****** footer ******/
 #footer {
 	width: 100%;
     background-color: #fff

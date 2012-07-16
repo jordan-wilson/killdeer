@@ -23,6 +23,7 @@
                         <li><a href="/admin/pages">Pages</a></li>
                         <li><a href="/admin/blogs">Blogs</a></li>
                         <li><a href="/admin/layouts">Layouts</a></li>
+                        <li><a href="/admin/blocks">Blocks</a></li>
                     </ul>
                 </div>
             </div>
