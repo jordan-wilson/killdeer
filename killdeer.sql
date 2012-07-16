@@ -23,6 +23,35 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `blocks`
+--
+
+CREATE TABLE IF NOT EXISTS `blocks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `skin` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `blocks`
+--
+
+INSERT INTO `blocks` (`id`, `name`, `skin`, `title`, `content`) VALUES
+(1, 'Block 1 (green)', 'green', 'Block 1', '<p>Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p><p>Vestibulum id ligula porta felis euismod semper. Donec id elit non mi porta gravida at eget metus.</p>'),
+(2, 'Block 2 (blue)', 'blue', 'Block 2', '<p>Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>'),
+(3, 'Block 3', 'default', 'Block 3', '<p>Ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Donec id elit non mi porta gravida at eget metus.</p>\r\n            \r\n            '),
+(4, 'Block 4', '', 'Block 4', '<p>Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>'),
+(5, 'Block 5', '', 'Block 5', '<p>Donec id elit non mi porta gravida at eget metus. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>'),
+(6, 'Block 6', '', 'Block 6', '<p>Donec id elit non mi porta gravida at eget metus. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>'),
+(7, 'Block 7', '', 'Block 7', '<p>Facebook Like</p><p>Twitter Retweet</p><p>Google Plus</p>');
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `blogs`
 --
 
