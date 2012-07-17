@@ -5,7 +5,7 @@
         <notes><![CDATA[This is the template for the Blog module. Cell 1 is completely locked. Nothing can be repositioned, removed or added to it. It will be appended with a list of blog post.]]></notes>
         <controller>blogs</controller>
         <skin>default</skin>
-        <cells>
+        <rows>
             <row>
                 <cell class="span9" protected="1">
                     <block value="[content]" locked="1" />
@@ -16,7 +16,7 @@
                     <block value="[blogs:recent]" />
                 </cell>
             </row>
-        </cells>
+        </rows>
         <template>blogs.default.layout.php</template>
     </layout>
     
@@ -24,19 +24,19 @@
         <name>Blogs post page template</name>
         <controller>blogs</controller>
         <skin>post</skin>
-        <cells>
+        <rows>
             <row>
                 <cell class="span2"></cell>
                 <cell class="span7" protected="1">
                     <block value="[content]" locked="1" />
                 </cell>
                 <cell class="span3">
-                    <block value="[blogs:subscribe]" />
-                    <block value="[blogs:categories]" />
-                    <block value="[blogs:recent]" />
+                    <block value="[blogs:subscribe]" locked="1" />
+                    <block value="[blogs:categories]" locked="1" />
+                    <block value="[blogs:recent]" locked="1" />
                 </cell>
             </row>
-        </cells>
+        </rows>
         <template>blogs.post.layout.php</template>
     </layout>
     

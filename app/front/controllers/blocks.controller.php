@@ -9,7 +9,8 @@ class blocks extends controller
         
         // get block info
         $blocks_model = load_model('blocks');
-        $data = $blocks_model->get_block($id);
+        //$data = $blocks_model->get_block($id);
+        $data = $blocks_model->get_block_from_id($id);
         
         // if blog not found
         if ( ! count($data)) return '';

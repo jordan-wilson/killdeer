@@ -46,6 +46,40 @@ if ( ! function_exists('parse_cell'))
 
 
 //
+// PARSE BLOCK FROM DATA STRING
+//
+if ( ! function_exists('parse_block'))
+{
+    function parse_block( $block = '' )
+    {
+        $html = '';
+        
+        // IF   $block   = '[forms:1]'
+        // THEN $matches = array('[forms:1]', 'forms', '1')
+        if ( $block != '' )
+        {
+            $matches = array();
+            preg_match('/^\[(.*):(.*)\]$/', $block, $matches);
+            if (count($matches) == 3)
+            {
+                $controller = load_controller($matches[1]);
+                if ($controller)
+                {
+                    if (method_exists($controller, 'get_block'))
+                    {
+                        $html = $controller->get_block($matches[2]);
+                    }
+                }
+            }
+        }
+        
+        return $html;
+    }
+}
+
+
+
+//
 // LOAD CORE CLASS
 //
 if ( ! function_exists('load_core'))
@@ -85,7 +119,8 @@ if ( ! function_exists('load_view'))
         if (file_exists($path))
             return _return_view($path, $vars);
         
-        // skins templates directory
+        /*
+        // "/skins/' templates directory
         $path = SITE_ROOT . '/skins/' . APP . '/' . $skin . '/templates/' . $view;
         if (file_exists($path))
             return _return_view($path, $vars);
@@ -99,7 +134,17 @@ if ( ! function_exists('load_view'))
         $path = SITE_ROOT . '/app/' . APP . '/templates/' . $view;
         if (file_exists($path))
             return _return_view($path, $vars);
+        */
         
+        // "/skins/modules/" directory
+        $path = SITE_ROOT . '/skins/' . APP . '/' . $skin . '/modules/' . $view;
+        if (file_exists($path))
+            return _return_view($path, $vars);
+        
+        // "/skins/modules/[controller]/" directory
+        $path = SITE_ROOT . '/skins/' . APP . '/' . $skin . '/modules/' . preg_replace('/\./', '/', $view, 1);
+        if (file_exists($path))
+            return _return_view($path, $vars);
         
         // check for a default template to fallback on
         if ($default != '')

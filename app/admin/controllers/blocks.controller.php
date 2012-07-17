@@ -39,6 +39,10 @@ class blocks extends controller
         if ( ! count($data))
             error_page();
         
+        // can't edit an html block
+        if ( $data['skin'] == 'html' )
+            error_page();
+        
         // get block skins
         $data['skins'] = $this->_get_block_skins();
         
@@ -89,10 +93,13 @@ class blocks extends controller
                 {
                     foreach($xml->blocks->block as $idx => $block)
                     {
-                        //echo '<pre>' . print_r($block, true) . '</pre>';
-                        $skin = (string) $block->skin;
-                        $name = (string) $block->name;
-                        $skins[ $skin ] = $name;
+                        if ($block->skin != 'html')
+                        {
+                            //echo '<pre>' . print_r($block, true) . '</pre>';
+                            $skin = (string) $block->skin;
+                            $name = (string) $block->name;
+                            $skins[ $skin ] = $name;
+                        }
                     }
                 }
             }

@@ -9,7 +9,10 @@
                 </div>
                 
                 <div class="span3">
+                    <?= parse_block('[blogs:subscribe]'); ?>
+                    <?= parse_block('[blogs:categories]'); ?>
                     <?= parse_cell($layout, 2); // cell 2 ?>
+                    <?= parse_block('[blogs:recent]'); ?>
                 </div>
                 
             </div>

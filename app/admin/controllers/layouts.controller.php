@@ -48,6 +48,13 @@ class layouts extends controller
         $data['layout']['cells'] = json_decode($data['layout']['cells']);
         array_unshift( $data['layout']['cells'], array() );
         
+        // get layout xml
+        $data['xml'] = $this->_get_layout_xml( $data['layout'] );
+        
+        // if layout xml not found
+        if ( ! count($data['xml']))
+            error_page();
+        
         // update content
         $this->content = load_view('layouts.edit.template.php', $data);
         
@@ -60,6 +67,51 @@ class layouts extends controller
         
         // load layout
         $this->display();
+    }
+    
+    
+    private function _get_layout_xml( $layout = array() )
+    {
+        $controller = ($layout['controller'] ? $layout['controller'] : 'pages' );
+        $skin = ($layout['skin'] ? $layout['skin'] : 'default' );
+        $node = null;
+        
+        //echo '<pre>' . print_r($layout, true) . '</pre>';
+        //echo '<p>controller: ' . $controller . '</p>';
+        //echo '<p>skin: ' . $skin . '</p>';
+        
+        // get the layout xml file
+        //$xml_file = dirname(__FILE__) . '/../../front/default/layouts/' . $controller . '.xml';
+        $xml_file = SITE_ROOT . '/skins/front/default/layouts/' . $controller . '.xml';
+        
+        if (file_exists($xml_file)) 
+        {
+            $xml = simplexml_load_file($xml_file);
+            //echo '<pre>' . print_r($xml, true) . '</pre>';
+            
+            foreach($xml as $idx => $layout_node)
+            {
+                //echo '<pre>' . print_r($layout_node, true) . '</pre>';
+                
+                //echo '<p>' . $layout_node->controller . ' ' . $layout_node->skin . '</p>';
+                if ($layout_node->controller == $controller)
+                {
+                    if ($layout_node->skin == $skin)
+                    {
+                        //echo '<pre>' . print_r($layout_node, true) . '</pre>';
+                        $node = $layout_node;
+                        break;
+                    }
+                }
+                
+            }
+        }
+        else
+        {
+            echo '<p>file not found:<br />' . $xml_file . '</p>';
+        }
+        
+        return $node;
     }
     
     

@@ -14,11 +14,11 @@ class controller
         
         // set default main template
         $this->header_template = DEFAULT_HEADER_TEMPLATE;
-        $this->layout_template = DEFAULT_LAYOUT_TEMPLATE;
+        $this->main_template   = DEFAULT_MAIN_TEMPLATE;
         $this->footer_template = DEFAULT_FOOTER_TEMPLATE;
         
         // used as a fallback if custom layout isn't found
-        $this->default_layout_template = '';
+        $this->default_main_template = '';
     }
     
     
@@ -31,10 +31,11 @@ class controller
         {
             // update layout template
             $layout_controller = ($layout['controller'] == '') ? DEFAULT_CONTROLLER : $layout['controller'];
-            $layout_skin = ($layout['skin'] == '') ? 'default' : $layout['skin'];
-            $layout_template = $layout_controller . '.' . $layout_skin . '.layout.php';
-            $this->layout_template = $layout_template;
-            $this->default_layout_template = DEFAULT_LAYOUT_TEMPLATE;
+            $layout_skin       = ($layout['skin'] == '') ? 'default' : $layout['skin'];
+            $main_template     = $layout_controller . '.' . $layout_skin . '.template.php';
+            
+            $this->main_template         = $main_template;
+            $this->default_main_template = DEFAULT_MAIN_TEMPLATE;
             
             // if there is cell data
             if ( ! empty($layout['cells']))
@@ -60,6 +61,7 @@ class controller
                             // else, try and load modular content
                             else
                             {
+                                /*
                                 // IF   $block   = '[forms:1]'
                                 // THEN $matches = array('[forms:1]', 'forms', '1')
                                 $matches = array();
@@ -75,6 +77,9 @@ class controller
                                         }
                                     }
                                 }
+                                */
+                                //$view = $this->parse_block_layout($block);
+                                $view = parse_block($block);
                             }
                             
                             // if view is still blank then it's an html block
@@ -107,7 +112,7 @@ class controller
         
         // load layout (with default fallback)
         $data = array('layout' => $this->registry->page_layout);
-        echo load_view($this->layout_template, $data, $this->default_layout_template);
+        echo load_view($this->main_template, $data, $this->default_main_template);
         
         // load footer
         echo load_view($this->footer_template);

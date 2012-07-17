@@ -5,14 +5,14 @@
         <notes><![CDATA[The [content] block in cell 1 is locked. It cannot be removed or repositioned. Other blocks may be added to or removed from cell 1.]]></notes>
         <controller>pages</controller>
         <skin>default</skin>
-        <cells>
+        <rows>
             <row>
                 <cell class="span8">
                     <block value="[content]" locked="1" />
                 </cell>
                 <cell class="span4"></cell>
             </row>
-        </cells>
+        </rows>
         <template>pages.default.layout.php</template>
     </layout>
     
@@ -21,7 +21,7 @@
         <notes><![CDATA[Cell 1 is completely locked. Nothing can be removed from it or added to it. Cell 3 may contain at most one block. Cell 4 is limited to two blocks.]]></notes>
         <controller>pages</controller>
         <skin>home</skin>
-        <cells>
+        <rows>
             <row>
                 <cell class="span8" protected="1">
                     <block value="[content]" locked="1" />
@@ -37,7 +37,7 @@
             <row>
                 <cell class="span12" />
             </row>
-        </cells>
+        </rows>
         <template>pages.home.layout.php</template>
     </layout>
     
@@ -46,7 +46,7 @@
         <notes><![CDATA[The [content] block in cell 1 is locked. It cannot be removed or repositioned. Other blocks may be added to or removed from cell 1.]]></notes>
         <controller>pages</controller>
         <skin>skin1</skin>
-        <cells>
+        <rows>
             <row>
                 <cell class="span8">
                     <block value="[content]" locked="1" />
@@ -57,7 +57,7 @@
                 <cell class="span6"></cell>
                 <cell class="span6"></cell>
             </row>
-        </cells>
+        </rows>
         <template>pages.skin1.layout.php</template>
     </layout>
     

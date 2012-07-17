@@ -10,7 +10,7 @@ class blocks_model extends model
         
         try
         {     
-            $stmt = $this->db->prepare("SELECT * FROM blocks ORDER BY name");
+            $stmt = $this->db->prepare("SELECT * FROM blocks WHERE skin != 'html' ORDER BY name");
             $stmt->execute();
             if ($stmt->rowCount())
             {

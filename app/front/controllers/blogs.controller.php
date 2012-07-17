@@ -55,7 +55,8 @@ class blogs extends controller
         $data['blogs'] = $blogs_model->get_blogs( $this->blogs_start, $this->blogs_perpage );
         
         // return html
-        return load_view('blogs.index.template.php', $data);
+        //return load_view('blogs.index.template.php', $data);
+        return load_view('blogs.index.content.php', $data);
     }
     
     
@@ -80,12 +81,23 @@ class blogs extends controller
         $layouts_model = load_model('layouts');
         $layout = $layouts_model->get_layout_from_id($data['blog']['layout']);
         
+        /*
         // update page layout
         if (count($layout))
             $this->registry->page_layout = $layout;
+        //*/
+        
+        // force blog template
+        $this->registry->page_layout['skin'] = 'post';
+        
+        // update cells
+        if (count($layout))
+            $this->registry->page_layout['cells'] = $layout['cells'];
+        
         
         // return html
-        return load_view('blogs.view.template.php', $data);
+        //return load_view('blogs.view.template.php', $data);
+        return load_view('blogs.view.content.php', $data);
     }
     
     

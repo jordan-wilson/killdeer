@@ -91,9 +91,13 @@ class router
         // it'll store all the urls in the registry so anything can access them
         // ie: the blog block will first need to determine if there is a blog page
         // to link to - if not they don't return anything
-        //$arr = array();
-        //$arr['blogs'] = 'blog';
-        //$this->registry->modules = $arr;
+        $arr = array();
+        $arr['blogs'] = 'blog';
+        $this->registry->modules = $arr;
+        
+        /*
+            this won't work while I'm trying to use the `layouts` table
+            as a way to define layouts for everything
         
         $arr = array();
         
@@ -113,6 +117,7 @@ class router
         }
         
         $this->registry->modules = $arr;
+        */
     }
     
     

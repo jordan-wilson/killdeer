@@ -11,9 +11,10 @@ define('DEFAULT_CONTROLLER', 'pages');
 define('DEFAULT_SKIN', 'default');
 define('ERROR_CONTROLLER', 'error');
 define('HTML_BLOCK_TEMPLATE', 'blocks.html.block.php');
-define('DEFAULT_HEADER_TEMPLATE', 'header.layout.php');
-define('DEFAULT_LAYOUT_TEMPLATE', 'pages.default.layout.php');
-define('DEFAULT_FOOTER_TEMPLATE', 'footer.layout.php');
+define('DEFAULT_HEADER_TEMPLATE', 'pages.header.template.php');
+define('DEFAULT_MAIN_TEMPLATE',   'pages.default.template.php');
+define('DEFAULT_FOOTER_TEMPLATE', 'pages.footer.template.php');
+
 
 // LOAD APP FUNCTIONS & OVERRIDES
 $path = SITE_ROOT . '/app/' . APP . '/core/functions.php';
