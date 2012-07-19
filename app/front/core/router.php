@@ -6,7 +6,7 @@ class router
     private $registry;
     
     public function __construct()
-    {   
+    {
         // load registry
         $this->registry = load_core('registry');
         
@@ -41,7 +41,7 @@ class router
     // get the page info
     private function _parse_page()
     {
-        $url = $this->registry->request_args[0];
+        $url  = $this->registry->request_args[0];
         
         // get page info
         $pages_model = load_model('pages');
@@ -78,6 +78,15 @@ class router
             if ($layout['controller'] != '')
                 $this->registry->controller = $layout['controller'];
         }
+        
+        // update action
+        //$action = $this->registry->request_args[1];
+        //if ( $action != '' )
+        //{
+            // check for controller action
+            //if (method_exists($controller, $action))
+                //$this->registry->action = $action;
+        //}
         
     }
     

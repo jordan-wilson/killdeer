@@ -15,21 +15,21 @@ class blogs extends controller
         if (count($request) == 1)
         {
             // landing page
-            $this->registry->page_content = $this->_index();
+            //$this->registry->page_content = $this->_index();
+            $this->_index();
         }
         elseif (count($request) == 2)
         {
             // individual blog post
-            $this->registry->page_content = $this->_view($request[1]);
+            //$this->registry->page_content = $this->_view($request[1]);
+            $this->_view($request[1]);
         }
         else {
-            /*
-                Right now I'm just redirecting the user to the error page since
-                I can't figure out how to load the error page using the pages
-                controller in an efficient way. I'll probably need to stick it
-                where everyone can call it. Like the base 'controller' or 
-                'registry' classes.
-            */
+            // Right now I'm just redirecting the user to the error page since
+            // I can't figure out how to load the error page using the pages
+            // controller in an efficient way. I'll probably need to stick it
+            // where everyone can call it. Like the base 'controller' or 
+            // 'registry' classes.
             header('Location: /error');
             exit();
         }
@@ -56,7 +56,8 @@ class blogs extends controller
         
         // return html
         //return load_view('blogs.index.template.php', $data);
-        return load_view('blogs.index.content.php', $data);
+        //return load_view('blogs.index.content.php', $data);
+        $this->_data = $data;
     }
     
     
@@ -81,11 +82,9 @@ class blogs extends controller
         $layouts_model = load_model('layouts');
         $layout = $layouts_model->get_layout_from_id($data['blog']['layout']);
         
-        /*
         // update page layout
-        if (count($layout))
-            $this->registry->page_layout = $layout;
-        //*/
+        //if (count($layout))
+            //$this->registry->page_layout = $layout;
         
         // force blog template
         $this->registry->page_layout['skin'] = 'post';
@@ -97,7 +96,8 @@ class blogs extends controller
         
         // return html
         //return load_view('blogs.view.template.php', $data);
-        return load_view('blogs.view.content.php', $data);
+        //return load_view('blogs.view.content.php', $data);
+        $this->_data = $data;
     }
     
     

@@ -10,7 +10,7 @@ define('URL_BASE', '/');
 define('DEFAULT_CONTROLLER', 'pages');
 define('DEFAULT_SKIN', 'default');
 define('ERROR_CONTROLLER', 'error');
-define('HTML_BLOCK_TEMPLATE', 'blocks.html.block.php');
+//define('HTML_BLOCK_TEMPLATE', 'blocks.html.block.php');
 define('DEFAULT_HEADER_TEMPLATE', 'pages.header.template.php');
 define('DEFAULT_MAIN_TEMPLATE',   'pages.default.template.php');
 define('DEFAULT_FOOTER_TEMPLATE', 'pages.footer.template.php');

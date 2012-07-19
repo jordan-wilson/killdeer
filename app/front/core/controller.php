@@ -3,6 +3,8 @@
 class controller
 {
     
+    var $_data = array();
+    
     public function __construct()
     {
         // get loaded classes and assign them to this object
@@ -50,44 +52,7 @@ class controller
                     {
                         foreach($cell as $j => $block)
                         {
-                            $view = '';
-                            
-                            // if regular page content
-                            if ($block == '[content]')
-                            {
-                                $view = $this->registry->page_content;
-                            }
-                            
-                            // else, try and load modular content
-                            else
-                            {
-                                /*
-                                // IF   $block   = '[forms:1]'
-                                // THEN $matches = array('[forms:1]', 'forms', '1')
-                                $matches = array();
-                                preg_match('/^\[(.*):(.*)\]$/', $block, $matches);
-                                if (count($matches) == 3)
-                                {
-                                    $controller = load_controller($matches[1]);
-                                    if ($controller)
-                                    {
-                                        if (method_exists($controller, 'get_block'))
-                                        {
-                                            $view = $controller->get_block($matches[2]);
-                                        }
-                                    }
-                                }
-                                */
-                                //$view = $this->parse_block_layout($block);
-                                $view = parse_block($block);
-                            }
-                            
-                            // if view is still blank then it's an html block
-                            if ($view == '')
-                            {
-                                $data = array('content' => $block);
-                                $view = load_view(HTML_BLOCK_TEMPLATE, $data);
-                            }
+                            $view = parse_block($block);
                             
                             // update cell's block content
                             $layout['cells'][$i][$j] = $view;
@@ -111,8 +76,9 @@ class controller
         echo load_view($this->header_template);
         
         // load layout (with default fallback)
-        $data = array('layout' => $this->registry->page_layout);
-        echo load_view($this->main_template, $data, $this->default_main_template);
+        //$data = array('layout' => $this->registry->page_layout);
+        //echo load_view($this->main_template, $data, $this->default_main_template);
+        echo load_view($this->main_template, $this->_data, $this->default_main_template);
         
         // load footer
         echo load_view($this->footer_template);

@@ -20,23 +20,24 @@ if ( ! function_exists('printr'))
 //
 if ( ! function_exists('parse_cell'))
 {
-    function parse_cell( $layout = array(), $idx = 0, $content = false )
+    //function parse_cell( $layout = array(), $idx = 0, $content = false )
+    function parse_cell( $idx = 0 )
     {
         $html = '<p>&nbsp;</p>';
         
-        // if layout contains cells data
+        // get page layout from registry
+        $registry = load_core('registry');
+        $layout = $registry->page_layout;
         if ($layout['cells'])
         {
-            if (count($layout['cells'][$idx]))
+            // if layout contains cells data
+            if ($layout['cells'])
             {
-                $html = join('', $layout['cells'][$idx]);
+                if (count($layout['cells'][$idx]))
+                {
+                    $html = join('', $layout['cells'][$idx]);
+                }
             }
-        }
-        // else, if this cell should contain the content
-        elseif ($content)
-        {
-            $registry = load_core('registry');
-            $html = $registry->page_content;
         }
         
         return $html;
@@ -54,10 +55,10 @@ if ( ! function_exists('parse_block'))
     {
         $html = '';
         
-        // IF   $block   = '[forms:1]'
-        // THEN $matches = array('[forms:1]', 'forms', '1')
         if ( $block != '' )
         {
+            // IF   $block   = '[forms:1]'
+            // THEN $matches = array('[forms:1]', 'forms', '1')
             $matches = array();
             preg_match('/^\[(.*):(.*)\]$/', $block, $matches);
             if (count($matches) == 3)
@@ -71,11 +72,39 @@ if ( ! function_exists('parse_block'))
                     }
                 }
             }
+            
         }
         
         return $html;
     }
 }
+
+
+
+//
+// PARSE PAGE CONTENT
+//
+if ( ! function_exists('parse_content'))
+{
+    function parse_content( $classname = 'page_content' )
+    {
+        $html = '';
+        
+        // get page content from registry
+        $registry = load_core('registry');
+        $content = $registry->page_data['content'];
+        if ( $content != '' )
+        {
+            $html .= '<div class="' . $classname . '">';
+                $html .= $content;
+            $html .= '</div>';
+        }
+        
+        return $html;
+    }
+}
+
+
 
 
 

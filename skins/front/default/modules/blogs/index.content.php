@@ -1,10 +1,4 @@
-    
-    <?php if ( $registry->page_data['content'] != '' ) : ?>
-        <div class="page_content">
-            <?= $registry->page_data['content'] ?>
-        </div>
-    <?php endif; ?>
-    
+                    
     <?php if ( count($blogs) ) : ?>
     
         <div class="blogs_landing">
@@ -52,6 +46,6 @@
         <?php endif; ?>
     
     <?php else: ?>
-        <p>No blogs have been posted yet.</p>
+        <p>content: No blogs have been posted yet.</p>
     <?php endif; ?>
     
