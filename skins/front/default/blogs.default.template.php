@@ -6,7 +6,7 @@
         <div class="span9">
         
             <?= parse_content(); ?>
-            <?= parse_cell(1); // cell 1 ?>
+            <?= parse_cell('append_content'); ?>
             
             <?php if ( count($blogs) ) : ?>
             
@@ -64,7 +64,7 @@
         <div class="span3">
             <?= parse_block('[blogs:subscribe]'); ?>
             <?= parse_block('[blogs:categories]'); ?>
-            <?= parse_cell(2); // cell 2 ?>
+            <?= parse_cell('right_column_callouts'); ?>
             <?= parse_block('[blogs:recent]'); ?>
         </div>
         

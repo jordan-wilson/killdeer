@@ -20,23 +20,28 @@ if ( ! function_exists('printr'))
 //
 if ( ! function_exists('parse_cell'))
 {
-    //function parse_cell( $layout = array(), $idx = 0, $content = false )
-    function parse_cell( $idx = 0 )
+    function parse_cell( $name = '' )
     {
-        $html = '<p>&nbsp;</p>';
+        $html = '';
         
         // get page layout from registry
         $registry = load_core('registry');
         $layout = $registry->page_layout;
-        if ($layout['cells'])
+        if (count($layout['cells']))
         {
-            // if layout contains cells data
-            if ($layout['cells'])
+            // if layout cell array exist
+            $cell = $layout['cells'][$name];
+            if (is_array($cell))
             {
-                if (count($layout['cells'][$idx]))
-                {
-                    $html = join('', $layout['cells'][$idx]);
-                }
+                //$html = join('',  $cell);
+                //$html .= debuggery('block', $name);
+                
+                $arr = array(
+                    'name' => $name,
+                    'html' => join('',  $cell)
+                );
+                $html = debuggery('block', $arr);
+                
             }
         }
         
@@ -68,7 +73,7 @@ if ( ! function_exists('parse_block'))
                 {
                     if (method_exists($controller, 'get_block'))
                     {
-                        $html = $controller->get_block($matches[2]);
+                        $html .= $controller->get_block($matches[2]);
                     }
                 }
             }
@@ -97,7 +102,74 @@ if ( ! function_exists('parse_content'))
         {
             $html .= '<div class="' . $classname . '">';
                 $html .= $content;
+                $html .= debuggery('content');
             $html .= '</div>';
+        }
+        
+        return $html;
+    }
+}
+
+
+
+//
+// DEBUGGING
+//
+if ( ! function_exists('debuggery'))
+{
+    function debuggery( $case = '', $arr = array() )
+    {
+        $html = '';
+        
+        switch ($case)
+        {
+            case 'block':
+                if (DEBUGGERY)
+                {
+                    $html .= '<div class="debuggery_block">';
+                        $html .= $arr['html'];
+                        $html .= '<div class="debuggery_block_name">';
+                            $html .= 'cell: ' . $arr['name'];
+                        $html .= '</div>';
+                    $html .= '</div>';
+                }
+                else
+                {
+                    $html .= $arr['html'];
+                }
+                break;
+                
+            case 'content':
+                if (DEBUGGERY)
+                {
+                    $registry = load_core('registry');
+                    $layout = $registry->page_layout;
+                    $html .= '<div class="debuggery_content">';
+                        $html .= '<table>';
+                            $html .= '<tr>';
+                                $html .= '<td>controller: </td>';
+                                $html .= '<td>';
+                                    $html .= empty($layout['controller']) ? 'DEFAULT_CONTROLLER' : $layout['controller'];
+                                $html .= '</td>';
+                            $html .= '</tr>';
+                            $html .= '<tr>';    
+                                $html .= '<td>skin: </td>';
+                                $html .= '<td>';
+                                    $html .= empty($layout['skin']) ? 'DEFAULT_SKIN' : $layout['skin'];
+                                $html .= '</td>';
+                            $html .= '</tr>';
+                            $html .= '<tr>';
+                                $html .= '<td>template: </td>';
+                                $html .= '<td>' . $layout['main_template'] . '</td>';
+                            $html .= '</tr>';
+                            $html .= '<tr>';
+                                $html .= '<td>default template: </td>';
+                                $html .= '<td>' . $layout['default_main_template'] . '</td>';
+                            $html .= '</tr>';
+                        $html .= '</table>';
+                    $html .= '</div>';
+                }
+                break;
         }
         
         return $html;

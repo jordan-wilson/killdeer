@@ -1,0 +1,37 @@
+
+
+/****** debugging tools ******/
+
+/* layout data appended to content */
+.debuggery_content table {
+    font-size: 11px;
+    font-family: monospace;
+}
+.debuggery_content table td {
+    padding: 2px;
+}
+
+/* cell name on block rollover */
+.debuggery_block {
+    position: relative;
+}
+.debuggery_block:hover {
+    outline: 1px solid #000;
+}
+.debuggery_block_name {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 4px;
+    color: #fff;
+    font-size: 11px;
+    font-family: monospace;
+    background-color: #000;
+}
+.debuggery_block:hover .debuggery_block_name {
+    display: block;
+}
+
+
+

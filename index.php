@@ -14,6 +14,7 @@ define('ERROR_CONTROLLER', 'error');
 define('DEFAULT_HEADER_TEMPLATE', 'pages.header.template.php');
 define('DEFAULT_MAIN_TEMPLATE',   'pages.default.template.php');
 define('DEFAULT_FOOTER_TEMPLATE', 'pages.footer.template.php');
+define('DEBUGGERY', true);
 
 
 // LOAD APP FUNCTIONS & OVERRIDES

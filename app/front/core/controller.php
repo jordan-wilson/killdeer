@@ -31,36 +31,32 @@ class controller
         
         if (count($layout))
         {
-            // update layout template
+            // build the layout template
             $layout_controller = ($layout['controller'] == '') ? DEFAULT_CONTROLLER : $layout['controller'];
             $layout_skin       = ($layout['skin'] == '') ? 'default' : $layout['skin'];
             $main_template     = $layout_controller . '.' . $layout_skin . '.template.php';
             
+            // update layout template
             $this->main_template         = $main_template;
             $this->default_main_template = DEFAULT_MAIN_TEMPLATE;
+            $layout['main_template']         = $main_template;
+            $layout['default_main_template'] = DEFAULT_MAIN_TEMPLATE;
             
-            // if there is cell data
-            if ( ! empty($layout['cells']))
+            // check for cells data
+            if (is_array($layout['cells']))
             {
-                $layout['cells'] = json_decode($layout['cells']);
-                array_unshift($layout['cells'], array());
-            
-                // load block content into each cell of the layout
-                if (is_array($layout['cells']))
+                // loop through array of blocks
+                foreach($layout['cells'] as $key => $blocks)
                 {
-                    foreach($layout['cells'] as $i => $cell)
+                    // parse and replace each block with the actual html
+                    foreach($blocks as $idx => $block)
                     {
-                        foreach($cell as $j => $block)
-                        {
-                            $view = parse_block($block);
-                            
-                            // update cell's block content
-                            $layout['cells'][$i][$j] = $view;
-                        }
+                        $parse = parse_block($block);
+                        $layout['cells'][$key][$idx] = $parse;
                     }
                 }
-                
             }
+            
         }
         
         $this->registry->page_layout = $layout;

@@ -66,12 +66,16 @@ class router
         // get page layout
         $layouts_model = load_model('layouts');
         //$layout = $layouts_model->get_layout($data['layout']);
-        $layout = $layouts_model->get_layout_from_id($data['layout']);
+        //$layout = $layouts_model->get_layout_from_id($data['layout']);
+        $layout = $layouts_model->get_layout_from_table($data['id'], 'pages');
         
         // if the layout is an array
         if (is_array($layout))
         {
-            // update page layout (even if it's empty)
+            // get cell data for this layout
+            $layout['cells'] = $layouts_model->get_layout_cells($layout['id']);
+            
+            // update page layout
             $this->registry->page_layout = $layout;
         
             // update controller from layout
@@ -91,17 +95,13 @@ class router
         // it'll store all the urls in the registry so anything can access them
         // ie: the blog block will first need to determine if there is a blog page
         // to link to - if not they don't return anything
-        $arr = array();
-        $arr['blogs'] = 'blog';
-        $this->registry->modules = $arr;
-        
-        /*
-            this won't work while I'm trying to use the `layouts` table
-            as a way to define layouts for everything
+        //$arr = array();
+        //$arr['blogs'] = 'blog';
+        //$this->registry->modules = $arr;
         
         $arr = array();
         
-        // get list of unique controller layouts
+        // get list of unique layout controllers attached to pages
         $layouts_model = load_model('layouts');
         $layouts = $layouts_model->get_controllers_list();
         if (count($layouts))
@@ -110,14 +110,13 @@ class router
             $pages_model = load_model('pages');
             foreach($layouts as $key => $val)
             {
-                $page_url = $pages_model->get_page_url_from_layout($val);
+                $page_url = $pages_model->get_page_url_from_id($val);
                 if ( ! empty($page_url))
                     $arr[$key] = $page_url;
             }
         }
         
         $this->registry->modules = $arr;
-        */
     }
     
     

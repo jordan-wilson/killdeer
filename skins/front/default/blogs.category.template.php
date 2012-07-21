@@ -4,16 +4,14 @@
     <div class="row">
         
         <div class="span9">
-        
-            <?php /*<?= parse_content(); ?>*/ ?>
+            
+            <?= parse_cell('append_content'); ?>
             
             <?php if ( count($category) ) : ?>
                 <div class="blogs_category">
                     <?= $category['content']; ?>
                 </div>
             <?php endif; ?>
-            
-            <?= parse_cell(1); // cell 1 ?>
             
             <?php if ( count($blogs) ) : ?>
             
@@ -71,7 +69,8 @@
         <div class="span3">
             <?= parse_block('[blogs:subscribe]'); ?>
             <?= parse_block('[blogs:categories]'); ?>
-            <?= parse_cell(2); // cell 2 ?>
+            <?= parse_cell('right_column_blog_category_callouts'); ?>
+            <?= parse_cell('right_column_callouts'); ?>
             <?= parse_block('[blogs:recent]'); ?>
         </div>
         

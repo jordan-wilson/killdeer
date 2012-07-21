@@ -69,14 +69,25 @@ class blogs extends controller
         // update meta tags
         $this->registry->update_meta($data['blog']);
         
-        // get blog layout
-        $layouts_model = load_model('layouts');
-        $layout = $layouts_model->get_layout_from_id($data['blog']['layout']);
         
-        // update layout
-        $this->registry->page_layout['skin'] = 'post';
+        // get the blog's layout
+        $layouts_model = load_model('layouts');
+        $layout = $layouts_model->get_layout_from_table($data['blog']['id'], 'blogs');
         if (count($layout))
-            $this->registry->page_layout['cells'] = $layout['cells'];
+        {
+            // get cell data for this layout
+            $layout_cells = $layouts_model->get_layout_cells($layout['id']);
+            
+            // merge blog post and landing page cells together
+            $layout['cells'] = array_merge($this->registry->page_layout['cells'], $layout_cells);
+            
+            // update page layout
+            $this->registry->page_layout = $layout;
+        }
+        
+        // force layout to use this skin
+        $this->registry->page_layout['skin'] = 'post';
+        
         
         // update template data
         $this->_data = $data;
@@ -100,9 +111,25 @@ class blogs extends controller
         // update meta tags
         $this->registry->update_meta($data['category']);
         
-        // get blog layout
+        
+        // get the category's layout
         $layouts_model = load_model('layouts');
-        $layout = $layouts_model->get_layout_from_id($data['category']['layout']);
+        $layout = $layouts_model->get_layout_from_table($data['category']['id'], 'blog_categories');
+        if (count($layout))
+        {
+            // get cell data for this layout
+            $layout_cells = $layouts_model->get_layout_cells($layout['id']);
+            
+            // merge blog category and landing page cells together
+            $layout['cells'] = array_merge($this->registry->page_layout['cells'], $layout_cells);
+            
+            // update page layout
+            $this->registry->page_layout = $layout;
+        }
+        
+        // force layout to use this skin
+        $this->registry->page_layout['skin'] = 'category';
+        
         
         // blog pagination
         $this->_blog_pagination();
@@ -113,10 +140,6 @@ class blogs extends controller
         $blogs_model = load_model('blogs');
         $data['blogs'] = $blogs_model->get_blogs_by_category( $data['category']['id'], $this->blogs_start, $this->blogs_perpage );
         
-        // update layout
-        $this->registry->page_layout['skin'] = 'category';
-        if (count($layout))
-            $this->registry->page_layout['cells'] = $layout['cells'];
         
         // update template data
         $this->_data = $data;

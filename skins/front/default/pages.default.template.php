@@ -3,11 +3,11 @@
         
         <div class="span8">
             <?= parse_content(); ?>
-            <?= parse_cell(1); // cell 1 ?>
+            <?= parse_cell('append_content'); ?>
         </div>
         
         <div class="span4">
-            <?= parse_cell(2); // cell 2 ?>
+            <?= parse_cell('right_column_callouts'); ?>
         </div>
         
     </div>
