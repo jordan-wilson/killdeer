@@ -79,15 +79,6 @@ class router
                 $this->registry->controller = $layout['controller'];
         }
         
-        // update action
-        //$action = $this->registry->request_args[1];
-        //if ( $action != '' )
-        //{
-            // check for controller action
-            //if (method_exists($controller, $action))
-                //$this->registry->action = $action;
-        //}
-        
     }
     
     

@@ -6,7 +6,7 @@
             <ul>
                 <?php foreach( $blogs AS $idx => $blog ) : ?>
                     <li>
-                        <a href="<?= $link . $blog['url']; ?>">
+                        <a href="/<?= $registry->modules['blogs'] . '/' . $blog['url']; ?>">
                             <?= $blog['name']; ?>
                         </a>
                     </li>

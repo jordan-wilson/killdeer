@@ -1,10 +1,17 @@
+
+    <?php if ( count($categories) ) : ?>
     
-    <div class="blogs_categories_block">
-        <h3>Categories Block</h3>
-        <ul>
-            <li>Donec</li>
-            <li>Elit non</li>
-            <li>Mi porta gravida</li>
-        </ul>
-    </div>
-    
+        <div class="blogs_categories_block">
+            <h3>Blog Categories</h3>
+            <ul>
+                <?php foreach( $categories as $category ) : ?>
+                    <li>
+                        <a href="/<?= $registry->modules['blogs'] . '/' . 'category/' . $category['url']; ?>">
+                            <?= $category['name']; ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>   
+        </div>
+        
+    <?php endif; ?>

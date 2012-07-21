@@ -5,34 +5,27 @@ class blogs extends controller
     
     private $blogs_perpage = 5;
     private $blogs_start   = 0;
-    private $newer_page     = '';
-    private $older_page     = '';
+    private $newer_page    = '';
+    private $older_page    = '';
+    
     
     public function index()
     {
-        // update page content depending on url request
+        // get url request
         $request = $this->registry->request_args;
-        if (count($request) == 1)
-        {
-            // landing page
-            //$this->registry->page_content = $this->_index();
+        
+        // category page
+        if ($request[1] == 'category' && $request[2] != '')
+            $this->_category($request[2]);
+        
+        // blog post
+        elseif ($request[1])
+            $this->_post($request[1]);
+        
+        // landing page
+        else
             $this->_index();
-        }
-        elseif (count($request) == 2)
-        {
-            // individual blog post
-            //$this->registry->page_content = $this->_view($request[1]);
-            $this->_view($request[1]);
-        }
-        else {
-            // Right now I'm just redirecting the user to the error page since
-            // I can't figure out how to load the error page using the pages
-            // controller in an efficient way. I'll probably need to stick it
-            // where everyone can call it. Like the base 'controller' or 
-            // 'registry' classes.
-            header('Location: /error');
-            exit();
-        }
+        
         
         // add css
         $this->_add_css();
@@ -54,15 +47,13 @@ class blogs extends controller
         $blogs_model = load_model('blogs');
         $data['blogs'] = $blogs_model->get_blogs( $this->blogs_start, $this->blogs_perpage );
         
-        // return html
-        //return load_view('blogs.index.template.php', $data);
-        //return load_view('blogs.index.content.php', $data);
+        // update template data
         $this->_data = $data;
     }
     
     
     // individual blog post
-    private function _view( $url = ''  )
+    private function _post( $url = ''  )
     {
         // get blog data
         $blogs_model = load_model('blogs');
@@ -82,21 +73,52 @@ class blogs extends controller
         $layouts_model = load_model('layouts');
         $layout = $layouts_model->get_layout_from_id($data['blog']['layout']);
         
-        // update page layout
-        //if (count($layout))
-            //$this->registry->page_layout = $layout;
-        
-        // force blog template
+        // update layout
         $this->registry->page_layout['skin'] = 'post';
-        
-        // update cells
         if (count($layout))
             $this->registry->page_layout['cells'] = $layout['cells'];
         
+        // update template data
+        $this->_data = $data;
+    }
+    
+    
+    // blogs by category
+    private function _category( $url = ''  )
+    {
+        // get blog category info
+        $blogs_model = load_model('blogs');
+        $data['category'] = $blogs_model->get_category_from_url( $url );
         
-        // return html
-        //return load_view('blogs.view.template.php', $data);
-        //return load_view('blogs.view.content.php', $data);
+        // if category not found
+        if ( ! $data['category'])
+        {
+            header('Location: /error');
+            exit();
+        }
+        
+        // update meta tags
+        $this->registry->update_meta($data['category']);
+        
+        // get blog layout
+        $layouts_model = load_model('layouts');
+        $layout = $layouts_model->get_layout_from_id($data['category']['layout']);
+        
+        // blog pagination
+        $this->_blog_pagination();
+        $data['newer_page'] = $this->newer_page;
+        $data['older_page'] = $this->older_page;
+        
+        // get blogs within range
+        $blogs_model = load_model('blogs');
+        $data['blogs'] = $blogs_model->get_blogs_by_category( $data['category']['id'], $this->blogs_start, $this->blogs_perpage );
+        
+        // update layout
+        $this->registry->page_layout['skin'] = 'category';
+        if (count($layout))
+            $this->registry->page_layout['cells'] = $layout['cells'];
+        
+        // update template data
         $this->_data = $data;
     }
     
@@ -138,6 +160,7 @@ class blogs extends controller
                 $newer_page = ($pg - 1);
                 $older_page = ($pg + 1);
                 
+                /*
                 $blog_page_link = $this->registry->page_data['url'];
                 
                 if ($newer_page > 1)
@@ -148,9 +171,41 @@ class blogs extends controller
                     
                 if ($older_page <= $total_pages)
                     $this->older_page = $blog_page_link . '?pg=' . $older_page;
+                */
                 
-                //$this->registry->page_data = $data;
-                //$data['link'] = '/' . $this->registry->modules['blogs'] . '/';
+                $query = array();
+                $request_uri = $_SERVER['REQUEST_URI'];
+                
+                $position = strrpos($request_uri, "?");
+                if ($position != FALSE)
+                {
+                    // get query string from url
+                    $query_str = substr($request_uri, ($position + 1));
+                    parse_str($query_str, $query);
+                    
+                    // remove existing page number
+                    if ( array_key_exists('pg', $query) )
+                        unset($query['pg']);
+                    
+                }
+                
+                // get url without query string
+                $request_url = substr($request_uri, 0, $position);
+                
+                // rebuild the query string
+                $query = http_build_query($query);
+                
+                // add the query back onto the url
+                $request_url = $request_url . ($query == '' ? '' : '?' . $query);
+                
+                if ($newer_page > 1)
+                    $this->newer_page = $request_url . ($query == '' ? '?' : '&') . 'pg=' . $newer_page;
+                
+                if ($newer_page == 1)
+                    $this->newer_page = $request_url;
+                    
+                if ($older_page <= $total_pages)
+                    $this->older_page = $request_url . ($query == '' ? '?' : '&') . 'pg=' . $older_page;
                 
             }
         }
@@ -158,13 +213,10 @@ class blogs extends controller
     }
     
     
-    private function _add_css()
-    {
-        $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/blogs.css';
-        $this->registry->add_css_by_url($css);
-    }
+        
+    /***** BLOCKS *****/
     
-    
+    // get blocks
     public function get_block( $arg = '' )
     {
         // check if the blogs module is on a page
@@ -184,13 +236,8 @@ class blogs extends controller
         
         // get the data
         $data = $this->$method($arg);
-        
-        // check if anything was returned
         if ( ! count($data))
             return '';
-        
-        // get the url of the blogs page
-        $data['link'] = '/' . $this->registry->modules['blogs'] . '/';
         
         // add css
         $this->_add_css();
@@ -237,7 +284,8 @@ class blogs extends controller
     private function _get_categories_block( $arg = array() )
     {
         // get blog category data
-        $data['category'] = 'some data here';
+        $blogs_model = load_model('blogs');
+        $data['categories'] = $blogs_model->get_categories();
         
         return $data;
     }
@@ -250,10 +298,18 @@ class blogs extends controller
         $blogs_model = load_model('blogs');
         $data['blogs'] = $blogs_model->get_blogs(0, 2);
         
-        // add css
-        $this->_add_css();
-        
         return $data;
+    }
+    
+    
+        
+    /***** COMMON *****/
+    
+    // add the style sheet
+    private function _add_css()
+    {
+        $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/blogs.css';
+        $this->registry->add_css_by_url($css);
     }
     
 }

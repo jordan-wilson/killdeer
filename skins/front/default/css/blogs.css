@@ -33,6 +33,15 @@
     font-size: 1.1em;
 }
 .blogs_view .blogs_post_content {}
+
+
+
+/****** blog category page ******/
+.blogs_category {
+    padding: 5px;
+    margin-bottom: 20px;
+    background-color: #e0e0e0;
+}
     
 
 

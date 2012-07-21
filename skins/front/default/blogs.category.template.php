@@ -5,7 +5,14 @@
         
         <div class="span9">
         
-            <?= parse_content(); ?>
+            <?php /*<?= parse_content(); ?>*/ ?>
+            
+            <?php if ( count($category) ) : ?>
+                <div class="blogs_category">
+                    <?= $category['content']; ?>
+                </div>
+            <?php endif; ?>
+            
             <?= parse_cell(1); // cell 1 ?>
             
             <?php if ( count($blogs) ) : ?>
@@ -55,7 +62,7 @@
                 <?php endif; ?>
             
             <?php else: ?>
-                <p>template: No blogs have been posted yet.</p>
+                <p>There have been no blogs listed under this category.</p>
             <?php endif; ?>
 
 
