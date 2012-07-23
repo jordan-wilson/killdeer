@@ -24,7 +24,7 @@ class controller
     }
     
     
-    // load blocks into each cell of layout
+    // update layout and load blocks
     public function parse_page_layout()
     {
         $layout = $this->registry->page_layout;
@@ -33,12 +33,12 @@ class controller
         {
             // build the layout template
             $layout_controller = ($layout['controller'] == '') ? DEFAULT_CONTROLLER : $layout['controller'];
-            $layout_skin       = ($layout['skin'] == '') ? 'default' : $layout['skin'];
-            $main_template     = $layout_controller . '.' . $layout_skin . '.template.php';
+            $layout_view       = ($layout['view'] == '') ? DEFAULT_VIEW : $layout['view'];
+            $main_template     = $layout_controller . '.' . $layout_view . '.template.php';
             
             // update layout template
-            $this->main_template         = $main_template;
-            $this->default_main_template = DEFAULT_MAIN_TEMPLATE;
+            $this->main_template             = $main_template;
+            $this->default_main_template     = DEFAULT_MAIN_TEMPLATE;
             $layout['main_template']         = $main_template;
             $layout['default_main_template'] = DEFAULT_MAIN_TEMPLATE;
             
@@ -63,6 +63,7 @@ class controller
     }
     
     
+    // output the page
     public function display()
     {
         // parse page layout
@@ -71,9 +72,7 @@ class controller
         // load header
         echo load_view($this->header_template);
         
-        // load layout (with default fallback)
-        //$data = array('layout' => $this->registry->page_layout);
-        //echo load_view($this->main_template, $data, $this->default_main_template);
+        // load layout (with a default fallback)
         echo load_view($this->main_template, $this->_data, $this->default_main_template);
         
         // load footer

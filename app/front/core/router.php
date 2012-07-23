@@ -12,7 +12,7 @@ class router
         
         // default controller -> action
         $this->registry->controller = DEFAULT_CONTROLLER;
-        $this->registry->action = 'index';
+        $this->registry->action     = DEFAULT_ACTION;
         
         $this->_parse_url();
         $this->_parse_page();
@@ -34,6 +34,7 @@ class router
                 $_args[] = $request_parts[$i];
             }
         }
+        
         $this->registry->request_args = count($_args) ? $_args : array('index');
     }
     
@@ -65,15 +66,13 @@ class router
         
         // get page layout
         $layouts_model = load_model('layouts');
-        //$layout = $layouts_model->get_layout($data['layout']);
-        //$layout = $layouts_model->get_layout_from_id($data['layout']);
         $layout = $layouts_model->get_layout_from_table($data['id'], 'pages');
         
         // if the layout is an array
         if (is_array($layout))
         {
             // get cell data for this layout
-            $layout['cells'] = $layouts_model->get_layout_cells($layout['id']);
+            $layout['cells'] = json_decode($layout['cells'], true);
             
             // update page layout
             $this->registry->page_layout = $layout;
@@ -89,16 +88,6 @@ class router
     // find all page urls with modules
     private function _parse_modules()
     {
-        // match the layout template name with the page that is using it
-        // the "layout.blogs.template.php" is being used by the "blog" page
-        // since there is no actual database right now i can't really build this function
-        // it'll store all the urls in the registry so anything can access them
-        // ie: the blog block will first need to determine if there is a blog page
-        // to link to - if not they don't return anything
-        //$arr = array();
-        //$arr['blogs'] = 'blog';
-        //$this->registry->modules = $arr;
-        
         $arr = array();
         
         // get list of unique layout controllers attached to pages
@@ -112,7 +101,7 @@ class router
             {
                 $page_url = $pages_model->get_page_url_from_id($val);
                 if ( ! empty($page_url))
-                    $arr[$key] = $page_url;
+                    $arr[$key] = URL_BASE . $page_url;
             }
         }
         
@@ -120,6 +109,7 @@ class router
     }
     
     
+    // load requested controller
     public function route()
     {
         // check for and load controller class

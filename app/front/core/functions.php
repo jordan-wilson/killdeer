@@ -9,14 +9,15 @@ if ( ! function_exists('printr'))
     {
         if (is_array($val))
             return '<pre>' . print_r($val, true) . '</pre>';
-        return $val;
+        
+        return $val . '<br />';
     }
 }
 
 
 
 //
-// PARSE CELL INTO STRING
+// PARSE LAYOUT CELL INTO STRING
 //
 if ( ! function_exists('parse_cell'))
 {
@@ -27,21 +28,16 @@ if ( ! function_exists('parse_cell'))
         // get page layout from registry
         $registry = load_core('registry');
         $layout = $registry->page_layout;
+        
+        // if there is cell data
         if (count($layout['cells']))
         {
             // if layout cell array exist
             $cell = $layout['cells'][$name];
             if (is_array($cell))
             {
-                //$html = join('',  $cell);
-                //$html .= debuggery('block', $name);
-                
-                $arr = array(
-                    'name' => $name,
-                    'html' => join('',  $cell)
-                );
-                $html = debuggery('block', $arr);
-                
+                $cell = join('',  $cell);
+                $html = (DEBUGGERY) ? debuggery('block', $arr = array('name' => $name, 'html' => $cell)) : $cell;
             }
         }
         
@@ -52,32 +48,24 @@ if ( ! function_exists('parse_cell'))
 
 
 //
-// PARSE BLOCK FROM DATA STRING
+// LOAD AND PARSE BLOCK
 //
 if ( ! function_exists('parse_block'))
 {
-    function parse_block( $block = '' )
+    function parse_block( $block = array() )
     {
         $html = '';
         
-        if ( $block != '' )
+        if (is_array($block))
         {
-            // IF   $block   = '[forms:1]'
-            // THEN $matches = array('[forms:1]', 'forms', '1')
-            $matches = array();
-            preg_match('/^\[(.*):(.*)\]$/', $block, $matches);
-            if (count($matches) == 3)
+            $controller = load_controller($block['controller']);
+            if ($controller)
             {
-                $controller = load_controller($matches[1]);
-                if ($controller)
+                if (method_exists($controller, 'get_block'))
                 {
-                    if (method_exists($controller, 'get_block'))
-                    {
-                        $html .= $controller->get_block($matches[2]);
-                    }
+                    $html = $controller->get_block($block);
                 }
             }
-            
         }
         
         return $html;
@@ -102,7 +90,7 @@ if ( ! function_exists('parse_content'))
         {
             $html .= '<div class="' . $classname . '">';
                 $html .= $content;
-                $html .= debuggery('content');
+                $html .= (DEBUGGERY) ? debuggery('content') : '';
             $html .= '</div>';
         }
         
@@ -119,56 +107,51 @@ if ( ! function_exists('debuggery'))
 {
     function debuggery( $case = '', $arr = array() )
     {
+        if ( ! DEBUGGERY)
+            return '';
+        
         $html = '';
         
         switch ($case)
         {
+            // add cell name on block rollover
             case 'block':
-                if (DEBUGGERY)
-                {
-                    $html .= '<div class="debuggery_block">';
-                        $html .= $arr['html'];
-                        $html .= '<div class="debuggery_block_name">';
-                            $html .= 'cell: ' . $arr['name'];
-                        $html .= '</div>';
-                    $html .= '</div>';
-                }
-                else
-                {
+                $html .= '<div class="debuggery_block">';
                     $html .= $arr['html'];
-                }
-                break;
-                
-            case 'content':
-                if (DEBUGGERY)
-                {
-                    $registry = load_core('registry');
-                    $layout = $registry->page_layout;
-                    $html .= '<div class="debuggery_content">';
-                        $html .= '<table>';
-                            $html .= '<tr>';
-                                $html .= '<td>controller: </td>';
-                                $html .= '<td>';
-                                    $html .= empty($layout['controller']) ? 'DEFAULT_CONTROLLER' : $layout['controller'];
-                                $html .= '</td>';
-                            $html .= '</tr>';
-                            $html .= '<tr>';    
-                                $html .= '<td>skin: </td>';
-                                $html .= '<td>';
-                                    $html .= empty($layout['skin']) ? 'DEFAULT_SKIN' : $layout['skin'];
-                                $html .= '</td>';
-                            $html .= '</tr>';
-                            $html .= '<tr>';
-                                $html .= '<td>template: </td>';
-                                $html .= '<td>' . $layout['main_template'] . '</td>';
-                            $html .= '</tr>';
-                            $html .= '<tr>';
-                                $html .= '<td>default template: </td>';
-                                $html .= '<td>' . $layout['default_main_template'] . '</td>';
-                            $html .= '</tr>';
-                        $html .= '</table>';
+                    $html .= '<div class="debuggery_block_name">';
+                        $html .= 'cell: ' . $arr['name'];
                     $html .= '</div>';
-                }
+                $html .= '</div>';
+                break;
+            
+            // add template data to content block
+            case 'content':
+                $registry = load_core('registry');
+                $layout = $registry->page_layout;
+                $html .= '<div class="debuggery_content">';
+                    $html .= '<table>';
+                        $html .= '<tr>';
+                            $html .= '<td>controller: </td>';
+                            $html .= '<td>';
+                                $html .= empty($layout['controller']) ? 'DEFAULT_CONTROLLER' : $layout['controller'];
+                            $html .= '</td>';
+                        $html .= '</tr>';
+                        $html .= '<tr>';    
+                            $html .= '<td>view: </td>';
+                            $html .= '<td>';
+                                $html .= empty($layout['view']) ? 'DEFAULT_VIEW' : $layout['view'];
+                            $html .= '</td>';
+                        $html .= '</tr>';
+                        $html .= '<tr>';
+                            $html .= '<td>template: </td>';
+                            $html .= '<td>' . $layout['main_template'] . '</td>';
+                        $html .= '</tr>';
+                        $html .= '<tr>';
+                            $html .= '<td>default template: </td>';
+                            $html .= '<td>' . $layout['default_main_template'] . '</td>';
+                        $html .= '</tr>';
+                    $html .= '</table>';
+                $html .= '</div>';
                 break;
         }
         
@@ -187,17 +170,17 @@ if ( ! function_exists('load_core'))
 {
     function load_core($class_name)
     {        
-        // APP CLASS
+        // app class
         $path = SITE_ROOT . '/app/' . APP . '/core/' . $class_name . '.php';
         if (file_exists($path))
             return _load_class($class_name, $path);
         
-        // SYSTEM CLASS
+        // system class
         $path = SITE_ROOT . '/system/core/' . $class_name . '.php';
         if (file_exists($path))
             return _load_class($class_name, $path);
         
-        // CORE CLASS NOT FOUND
+        // core class not found
         return FALSE;
     }
 }
@@ -220,32 +203,15 @@ if ( ! function_exists('load_view'))
         if (file_exists($path))
             return _return_view($path, $vars);
         
-        /*
-        // "/skins/' templates directory
-        $path = SITE_ROOT . '/skins/' . APP . '/' . $skin . '/templates/' . $view;
-        if (file_exists($path))
-            return _return_view($path, $vars);
-            
-        // skins templates modules directory
-        $path = SITE_ROOT . '/skins/' . APP . '/' . $skin . '/templates/' . preg_replace('/\./', '/', $view, 1);
+        // "/skins/blocks/" directory
+        $path = SITE_ROOT . '/skins/' . APP . '/' . $skin . '/blocks/' . $view;
         if (file_exists($path))
             return _return_view($path, $vars);
         
-        // app templates
-        $path = SITE_ROOT . '/app/' . APP . '/templates/' . $view;
-        if (file_exists($path))
-            return _return_view($path, $vars);
-        */
-        
-        // "/skins/modules/" directory
-        $path = SITE_ROOT . '/skins/' . APP . '/' . $skin . '/modules/' . $view;
-        if (file_exists($path))
-            return _return_view($path, $vars);
-        
-        // "/skins/modules/[controller]/" directory
-        $path = SITE_ROOT . '/skins/' . APP . '/' . $skin . '/modules/' . preg_replace('/\./', '/', $view, 1);
-        if (file_exists($path))
-            return _return_view($path, $vars);
+        // "/skins/blocks/[controller]/" directory
+        //$path = SITE_ROOT . '/skins/' . APP . '/' . $skin . '/blocks/' . preg_replace('/\./', '/', $view, 1);
+        //if (file_exists($path))
+            //return _return_view($path, $vars);
         
         // check for a default template to fallback on
         if ($default != '')

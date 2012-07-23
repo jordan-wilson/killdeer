@@ -62,11 +62,11 @@
         </div>
         
         <div class="span3">
-            <?= parse_block('[blogs:subscribe]'); ?>
-            <?= parse_block('[blogs:categories]'); ?>
+            <?= parse_block( array('controller'=>'blogs', 'view'=>'subscribe') ); ?>
+            <?= parse_block( array('controller'=>'blogs', 'view'=>'categories') ); ?>
             <?= parse_cell('right_column_blog_callouts'); ?>
             <?= parse_cell('right_column_callouts'); ?>
-            <?= parse_block('[blogs:recent]'); ?>
+            <?= parse_block( array('controller'=>'blogs', 'view'=>'recent') ); ?>
         </div>
         
     </div>

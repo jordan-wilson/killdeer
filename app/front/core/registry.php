@@ -12,10 +12,9 @@ class registry
     public $meta_keywords;
     public $meta_description;
     
-    public $modules = array();        // array of all page urls with modules
-    public $page_data = array();      // the default database info of the page
-    public $page_layout = array();    // the default layout of the page
-    public $page_content = '';        // the default content block for the page
+    public $modules      = array();   // array of all page urls with modules
+    public $page_data    = array();   // the info of the page
+    public $page_layout  = array();   // the layout of the page
         
     public function __construct()
     {

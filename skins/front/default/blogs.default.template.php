@@ -1,22 +1,20 @@
-    
-    <?php /*echo printr(get_defined_vars());*/ ?> 
 
     <div class="row">
         
         <div class="span9">
-        
+            
             <?= parse_content(); ?>
             <?= parse_cell('append_content'); ?>
             
             <?php if ( count($blogs) ) : ?>
             
                 <div class="blogs_landing">
-                    <?php foreach( $blogs AS $idx => $blog ) : ?>
+                    <?php foreach( $blogs AS $blog ) : ?>
                     
                         <div class="blogs_post">
                             
                             <div class="blogs_post_name">
-                                <h2><?= $blog['id'] . ' ' . $blog['name']; ?></h2>
+                                <h2><?= $blog['name']; ?></h2>
                             </div>
                             
                             <div class="blogs_post_date">
@@ -28,7 +26,7 @@
                             </div>
                             
                             <div class="blogs_post_link">
-                                <a href="/<?= $registry->modules['blogs'] . '/' . $blog['url']; ?>">read more</a>
+                                <a href="<?= $registry->modules['blogs'] . '/' . $blog['url']; ?>">read more</a>
                             </div>
                         </div>
                         
@@ -62,10 +60,10 @@
         </div>
         
         <div class="span3">
-            <?= parse_block('[blogs:subscribe]'); ?>
-            <?= parse_block('[blogs:categories]'); ?>
+            <?= parse_block( array('controller'=>'blogs', 'view'=>'subscribe') ); ?>
+            <?= parse_block( array('controller'=>'blogs', 'view'=>'categories') ); ?>
             <?= parse_cell('right_column_callouts'); ?>
-            <?= parse_block('[blogs:recent]'); ?>
+            <?= parse_block( array('controller'=>'blogs', 'view'=>'recent') ); ?>
         </div>
         
     </div>

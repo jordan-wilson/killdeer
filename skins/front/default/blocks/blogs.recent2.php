@@ -1,18 +1,18 @@
     
     <?php if ( count($blogs) ) : ?>
-    
-        <div class="blogs_recent_block">
+            
+        <div class="blogs_recent_block2">
             <h3>Recent Blogs</h3>
             <ul>
-                <?php foreach( $blogs AS $idx => $blog ) : ?>
+                <?php foreach( $blogs AS $blog ) : ?>
                     <li>
-                        <a href="/<?= $registry->modules['blogs'] . '/' . $blog['url']; ?>">
+                        <a href="<?= $registry->modules['blogs'] . '/' . $blog['url']; ?>">
                             <?= $blog['name']; ?>
                         </a>
                     </li>
                 <?php endforeach; ?>
             </ul>
         </div>
-    
+        
     <?php endif; ?>
     

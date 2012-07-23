@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 21, 2012 at 04:44 AM
+-- Generation Time: Jul 23, 2012 at 03:08 PM
 -- Server version: 5.5.16
 -- PHP Version: 5.3.8
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `blocks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `skin` varchar(255) NOT NULL,
+  `view` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`id`)
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `blocks` (
 -- Dumping data for table `blocks`
 --
 
-INSERT INTO `blocks` (`id`, `name`, `skin`, `title`, `content`) VALUES
+INSERT INTO `blocks` (`id`, `name`, `view`, `title`, `content`) VALUES
 (1, 'Block 1 (green)', 'green', 'Block 1', '<p>Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p><p>Vestibulum id ligula porta felis euismod semper. Donec id elit non mi porta gravida at eget metus.</p>'),
 (2, 'Block 2 (blue)', 'blue', 'Block 2', '<p>Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>'),
 (3, 'Block 3', 'default', 'Block 3', '<p>Ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Donec id elit non mi porta gravida at eget metus.</p>\r\n            \r\n            '),
@@ -128,7 +128,8 @@ CREATE TABLE IF NOT EXISTS `layouts` (
   `table_id` int(11) NOT NULL DEFAULT '0',
   `table_name` varchar(255) NOT NULL,
   `controller` varchar(255) NOT NULL,
-  `skin` varchar(255) NOT NULL,
+  `view` varchar(255) NOT NULL,
+  `cells` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
@@ -136,22 +137,22 @@ CREATE TABLE IF NOT EXISTS `layouts` (
 -- Dumping data for table `layouts`
 --
 
-INSERT INTO `layouts` (`id`, `table_id`, `table_name`, `controller`, `skin`) VALUES
-(1, 1, 'pages', 'pages', 'home'),
-(2, 2, 'pages', '', ''),
-(3, 3, 'pages', 'pages', 'skin1'),
-(4, 5, 'pages', '', ''),
-(5, 4, 'pages', 'blogs', ''),
-(6, 10, 'blogs', 'blogs', ''),
-(8, 2, 'blog_categories', 'blogs', '');
+INSERT INTO `layouts` (`id`, `table_id`, `table_name`, `controller`, `view`, `cells`) VALUES
+(1, 1, 'pages', 'pages', 'home', '{"home1":[{"controller":"blocks","view":"block","id":1}],"home2":[{"controller":"blocks","view":"block","id":2},{"controller":"blocks","view":"block","id":6}],"home3":[{"controller":"blogs","id":4}],"home7":[{"controller":"blogs","view":"blogfull","id":2}],"home4":[{"controller":"forms","view":"blog","id":2}],"home5":[{"controller":"blogs","view":"recent"}],"home6":[{"controller":"blogs","view":"recent2"}]}'),
+(2, 2, 'pages', '', '', '{"append_content":[{"controller":"blocks","view":"block","id":2}],"right_column_callouts":[{"controller":"blocks","view":"block","id":3},{"controller":"blocks","view":"block","id":6}]}'),
+(3, 3, 'pages', 'pages', 'skin1', '{"append_content":[{"controller":"blogs","view":"blog","id":4,"type":"full"}],"right_column_callouts":[{"controller":"blocks","view":"block","id":4},{"controller":"forms","view":"form","id":2}],"content_callout_1":[{"controller":"blocks","view":"block","id":8}],"content_callout_2":[{"controller":"blocks","view":"block","id":9}]}'),
+(4, 5, 'pages', '', '', '{"append_content":[{"controller":"forms","view":"form","id":1}],"right_column_callouts":[{"controller":"blocks","view":"block","id":2},{"controller":"forms","view":"form","id":2},{"controller":"blocks","view":"block","id":4},{"controller":"forms","view":"form","id":2}]}'),
+(5, 4, 'pages', 'blogs', '', '{"append_content":[{"controller":"blocks","view":"block","id":1}],"right_column_callouts":[{"controller":"blocks","view":"block","id":5},{"controller":"blocks","view":"block","id":6}]}'),
+(6, 10, 'blogs', 'blogs', '', '{"append_blog_content":[{"controller":"blocks","view":"block","id":2}],"right_column_blog_callouts":[{"controller":"forms","view":"form","id":2}]}'),
+(8, 2, 'blog_categories', 'blogs', '', '{"right_column_blog_category_callouts":[{"controller":"blocks","view":"block","id":3},{"controller":"forms","view":"form","id":2}]}');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `layout_cells`
+-- Table structure for table `layout_cellsbak`
 --
 
-CREATE TABLE IF NOT EXISTS `layout_cells` (
+CREATE TABLE IF NOT EXISTS `layout_cellsbak` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `layout_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(255) NOT NULL,
@@ -160,10 +161,10 @@ CREATE TABLE IF NOT EXISTS `layout_cells` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
--- Dumping data for table `layout_cells`
+-- Dumping data for table `layout_cellsbak`
 --
 
-INSERT INTO `layout_cells` (`id`, `layout_id`, `name`, `blocks`) VALUES
+INSERT INTO `layout_cellsbak` (`id`, `layout_id`, `name`, `blocks`) VALUES
 (1, 1, 'home1', '["[blocks:1]"]'),
 (2, 1, 'home2', '["[blocks:2]","[blocks:6]"]'),
 (3, 1, 'home3', '["[blogs:4]"]'),
@@ -213,20 +214,6 @@ INSERT INTO `pages` (`id`, `name`, `url`, `content`, `meta_title`, `meta_keyword
 (3, 'About Us', 'about', '<h2>About Us</h2><p>Praesent sagittis lacus in elementum sodales lacus justo porttitor lacus vel dictum nisi dui nec turpis. Etiam at nisl nisl, sed porttitor dui. Proin eu laoreet mauris. Proin et massa et nulla pellentesque tempus et sed ligula. Ut congue feugiat enim.</p>', 'About Us', '', 'Praesent sagittis lacus in elementum sodales lacus justo porttitor.', 1),
 (4, 'Blog', 'blog', '<h2>Blog</h2><p>Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Donec id elit non mi porta gravida at eget metus.</p>', 'Blog', '', '', 1),
 (5, 'Contact Us', 'contact', '<h2>Contact Us</h2><p>Etiam at nisl nisl sed porttitor dui. Proin eu laoreet mauris. Proin et massa et nulla pellentesque tempus et sed ligula. Ut congue feugiat enim.</p>', 'Contact', '', '', 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `seo`
---
-
-CREATE TABLE IF NOT EXISTS `seo` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `keywords` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

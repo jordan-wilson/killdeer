@@ -14,8 +14,12 @@ class blogs extends controller
         // get url request
         $request = $this->registry->request_args;
         
+        // rss feed
+        if ($request[1] == 'rss')
+            $this->_rss();
+        
         // category page
-        if ($request[1] == 'category' && $request[2] != '')
+        elseif ($request[1] == 'category' && $request[2] != '')
             $this->_category($request[2]);
         
         // blog post
@@ -75,18 +79,16 @@ class blogs extends controller
         $layout = $layouts_model->get_layout_from_table($data['blog']['id'], 'blogs');
         if (count($layout))
         {
-            // get cell data for this layout
-            $layout_cells = $layouts_model->get_layout_cells($layout['id']);
-            
             // merge blog post and landing page cells together
-            $layout['cells'] = array_merge($this->registry->page_layout['cells'], $layout_cells);
+            $layout['cells'] = json_decode($layout['cells'], true);
+            $layout['cells'] = array_merge($this->registry->page_layout['cells'], $layout['cells']);
             
             // update page layout
             $this->registry->page_layout = $layout;
         }
         
-        // force layout to use this skin
-        $this->registry->page_layout['skin'] = 'post';
+        // force layout to use this view
+        $this->registry->page_layout['view'] = 'post';
         
         
         // update template data
@@ -117,18 +119,16 @@ class blogs extends controller
         $layout = $layouts_model->get_layout_from_table($data['category']['id'], 'blog_categories');
         if (count($layout))
         {
-            // get cell data for this layout
-            $layout_cells = $layouts_model->get_layout_cells($layout['id']);
-            
             // merge blog category and landing page cells together
-            $layout['cells'] = array_merge($this->registry->page_layout['cells'], $layout_cells);
+            $layout['cells'] = json_decode($layout['cells'], true);
+            $layout['cells'] = array_merge($this->registry->page_layout['cells'], $layout['cells']);
             
             // update page layout
             $this->registry->page_layout = $layout;
         }
         
-        // force layout to use this skin
-        $this->registry->page_layout['skin'] = 'category';
+        // force layout to use this view
+        $this->registry->page_layout['view'] = 'category';
         
         
         // blog pagination
@@ -143,6 +143,34 @@ class blogs extends controller
         
         // update template data
         $this->_data = $data;
+    }
+    
+    
+    // the rss feed
+    private function _rss()
+    {
+        // get 5 recent blogs
+        $blogs_model = load_model('blogs');
+        $data['blogs'] = $blogs_model->get_blogs(0, 5);
+        
+        // the blog rss title and description
+        $data['rss_title'] = 'Blog';
+        $data['rss_description'] = 'Curabitur hendrerit commodo mi sed iaculis donec consequat vulputate porta.';
+        
+        // the full url of the site
+        $data['site_url'] = ($_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'] . '/';
+        
+        // if no blogs
+        if ( ! count($data))
+        {
+            header('Location: /error');
+            exit();
+        }
+        
+        // exit with rss template
+        header('Content-type: text/xml');
+        echo load_view('blogs.rss.template.php', $data);
+        exit();
     }
     
     
@@ -199,6 +227,7 @@ class blogs extends controller
                 $query = array();
                 $request_uri = $_SERVER['REQUEST_URI'];
                 
+                // is there a query string
                 $position = strrpos($request_uri, "?");
                 if ($position != FALSE)
                 {
@@ -239,62 +268,67 @@ class blogs extends controller
         
     /***** BLOCKS *****/
     
-    // get blocks
-    public function get_block( $arg = '' )
+    // get blog block
+    public function get_block( $block = array() )
     {
+        if ( ! is_array($block))
+            return '';
+        
         // check if the blogs module is on a page
         if ( ! $this->registry->modules['blogs'])
             return '';
         
-        // split the argument into an array by '.'
-        $arg = explode('.', $arg);
-        
         // find the method to call based on the arugements
-        $block = is_numeric($arg[0]) ? 'blog' : $arg[0];
-        $method = '_get_' . $block . '_block';
+        $view = empty($block['view']) ? 'blog' : $block['view'];
+        $method = '_get_' . $view . '_block';
         
         // check for the method that returns the requested data
         if ( ! method_exists($this, $method))
             return '';
         
-        // get the data
-        $data = $this->$method($arg);
+        // get the data for the block
+        $data = $this->$method($block);
         if ( ! count($data))
             return '';
         
         // add css
         $this->_add_css();
         
-        // the default block template
-        $default = 'blogs.' . $block . '.default.block.php';
-        
-        // if using custom template
-        if ($arg[1])
-        {
-            // load the custom template
-            // load the default template if its not found
-            $template = 'blogs.' . $block . '.' . $arg[1] . '.block.php';
-            return load_view($template, $data, $default);
-        }
-        
-        // load the default template
-        return load_view($default, $data);
+        $view = 'blogs.' . $view . '.php';
+        return load_view($view, $data);
     }
     
     
     // individual blog block
-    private function _get_blog_block( $arg = array() )
+    private function _get_blog_block( $block = array() )
     {
+        if ( ! is_array($block))
+            return array();
+        
         // get blog info
         $blogs_model = load_model('blogs');
-        $data['blog'] = $blogs_model->get_blog_from_id($arg[0]);
+        $data['blog'] = $blogs_model->get_blog_from_id($block['id']);
+        
+        return $data;
+    }
+    
+    
+    // individual blog block (full blog post)
+    private function _get_blogfull_block( $block = array() )
+    {
+        if ( ! is_array($block))
+            return array();
+        
+        // get blog info
+        $blogs_model = load_model('blogs');
+        $data['blog'] = $blogs_model->get_blog_from_id($block['id']);
         
         return $data;
     }
     
     
     // subscribe block
-    private function _get_subscribe_block( $arg = array() )
+    private function _get_subscribe_block( $block = array() )
     {
         // if can subscribe
         $data['subscribe'] = true;
@@ -304,7 +338,7 @@ class blogs extends controller
     
     
     // categories block
-    private function _get_categories_block( $arg = array() )
+    private function _get_categories_block( $block = array() )
     {
         // get blog category data
         $blogs_model = load_model('blogs');
@@ -315,7 +349,18 @@ class blogs extends controller
     
     
     // recent blog post block
-    private function _get_recent_block( $arg = array() )
+    private function _get_recent_block( $block = array() )
+    {
+        // get recent blogs
+        $blogs_model = load_model('blogs');
+        $data['blogs'] = $blogs_model->get_blogs(0, 2);
+        
+        return $data;
+    }
+    
+    
+    // recent blog post block (green background)
+    private function _get_recent2_block( $block = array() )
     {
         // get recent blogs
         $blogs_model = load_model('blogs');

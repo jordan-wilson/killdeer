@@ -3,46 +3,98 @@
 class forms extends controller 
 {
     
-    private $submitted;
-    private $forms = array();
+    /*
+        if a form is submitted, $submitted is set to true and each form field
+        is validated. $submitted is switched to false on the first field that
+        doesn't validate. if $submitted is still true at the end of the process
+        when the form view is loaded, then the form's content is shown instead
+        of the form.
+    */
     
-    public function get_block( $id = 0 )
+    private $submitted = false;   // whether this form has been submitted
+    private $forms = array();     // track all the forms being displayed on the page
+    
+    
+    public function get_block( $block = array() )
     {
-        if ( ! is_numeric($id)) return '';
+        if ( ! is_array($block))
+            return '';
         
-        // check if form is unique
-        if (in_array($id, $this->forms))
-            return '<div class="forms_block" style="padding:5px; color:#fff; background-color:#870217">Form ' . $id . ' is already in use on this page. Only one instance of a form is allowed on the page.</div>';
+        if ( ! is_numeric($block['id']))
+            return '';
         
-        $this->forms[] = $id;
+        $form_id = $block['id'];
         
-        // get the page url
-        $request = $this->registry->request_args;
-        if ( ! count($request)) return '';
-        $url = $request[0];
+        // check if form is already on the page
+        if (in_array($form_id, $this->forms))
+            return '<div class="forms_block" style="padding:5px; color:#fff; background-color:#870217">Form ' . $form_id . ' is already in use on this page. Only one instance of a form is allowed on the page.</div>';
+        else
+            $this->forms[] = $form_id;
         
-        // check if this form has been submitted
-        // url would look like this: www.site.com/page/5/submit
-        $this->submitted = false;
-        $action = count($request) > 2 ? array_pop($request) : false;
-        $formid = count($request) > 1 ? array_pop($request) : false;
-        if ($action == 'submit' && is_numeric($formid))
-        {
-            // if this form was submitted
-            if ($formid == $id)
-            {
-                // return either the form with errors or thank you text
-                $this->submitted = true;
-                return $this->_build_form($id, $url, true);
-            }
-        }
         
-        // return the form
-        return $this->_build_form($id, $url);
+        // build the url to submit the form to
+        //$this->submitted = false;
+        //return $this->_parse_url($form_id);
+        
+        
+        // if $_POST['submit'] matches the forms name then it was submitted
+        $name = 'form' . $form_id;
+        $submit = load_core('input')->post('submit');
+        $this->submitted = ($submit == $name) ? true : false;
+        
+        // build the form
+        return $this->_build_form($form_id, $this->submitted);
     }
     
     
-    private function _build_form( $id = 0, $url = '', $validate = false )
+    /*
+    // check the query string to tell if this form has been submitted
+    // a url like "/contact?form=2" means that form 2 has been submitted
+    private function _parse_url( $form_id = 0 )
+    {
+        $query = array();
+        $request_uri = $_SERVER['REQUEST_URI'];
+        
+        // is there a query string
+        $position = strrpos($request_uri, "?");
+        if ($position !== FALSE)
+        {
+            // get query string from url
+            $query_str = substr($request_uri, ($position + 1));
+            parse_str($query_str, $query);
+            
+            // check if this form has been submitted
+            if ( array_key_exists('form', $query) )
+            {
+                if ($query['form'] == $form_id)
+                    $this->submitted = true;
+                else
+                    $query['form'] = $form_id;
+            }
+            else
+            {
+                $query['form'] = $form_id;
+            }
+            
+            // get url without query string
+            $request_uri = substr($request_uri, 0, $position);
+        }
+        
+        // rebuild the query string
+        $query = http_build_query($query);
+        
+        // add the query back onto the url
+        $action = $request_uri . '?' . ($query == '' ? 'form=' . $form_id : $query);
+        
+        // build the form
+        return $this->_build_form($form_id, $action, $this->submitted);
+    }
+    */
+    
+    
+    // build the form
+    //private function _build_form( $id = 0, $action = '', $validate = false )
+    private function _build_form( $id = 0, $validate = false )
     {
         // get form info
         $forms_model = load_model('forms');
@@ -71,25 +123,23 @@ class forms extends controller
             return '';
         
         
-        // add css
-        $this->_add_css();
-        
-        
         // build the data array
         $data = array();
-        $data['type'] = $form['type'];
-        $data['fields'] = join('', $fields);
-        $data['content'] = $form['content'];
+        $data['type']      = $form['type'];
+        //$data['action']    = $action;
+        $data['fields']    = join('', $fields);
+        $data['content']   = $form['content'];
         $data['submitted'] = $this->submitted;
         
         // the anchor link
         $data['name'] = 'form' . $form['id'];
+        $data['action']    = $_SERVER['REQUEST_URI'] . '#' . $data['name'];
         
-        // the post url
-        $data['action'] = '/' . $url . '/' . $form['id'] . '/submit#' . $data['name'];
+        // add css
+        $this->_add_css();
         
         // load view
-        return load_view('forms.default.block.php', $data);
+        return load_view('forms.default.php', $data);
     }
     
     
@@ -98,9 +148,12 @@ class forms extends controller
         $css = '/skins/' . APP . '/' . $this->registry->skin . '/css/forms.css';
         $this->registry->add_css_by_url($css);
     }
+        
     
     
-    public function get_field( $arr = array(), $validate = array() )
+    /***** FORM FIELDS & TEXT ELEMENTS *****/
+    
+    public function get_field( $arr = array(), $validate = false )
     {
         switch($arr['type'])
         {
@@ -243,7 +296,8 @@ class forms extends controller
                     $html .= '<option value=""></option>';
                     foreach($arr['options'] AS $option)
                     {
-                        $html .= '<option value="' . $option . '">' . $option . '</option>';
+                        $selected = ($option == $value) ? ' selected="selected"' : '';
+                        $html .= '<option value="' . $option . '"' . $selected . '>' . $option . '</option>';
                     }
                 $html .= '</select>';
                 $html .= $error;

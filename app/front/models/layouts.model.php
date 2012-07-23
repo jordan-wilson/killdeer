@@ -3,23 +3,25 @@
 class layouts_model extends model
 {
     /*
-        The layouts templates are pieced together using the "controller" and the "skin"
-        format: CONTROLLER.SKIN.template.php
+        The layouts templates are pieced together using the "controller" and the "view"
+        format: CONTROLLER.VIEW.template.php
         
         The "controller" tells the router which controller to load.
-        Default controller is "pages".
+        The default controller is "pages".
         
-        The "skin" just defines different templates to use. This way you can use different layouts for seperate sections under a single module.
+        The "view" just defines different templates to use. This way you can use different layouts for seperate sections under a single module.
         An example is the landing page for the blog (blogs.default.template.php) has one large column and a thin right column,
-        then the blog post page (blogs.post.template.php) will have a skinny column for social stuff, a middle column, and
-        then a thin right column.
+        then the blog post page (blogs.post.template.php) will have a completely different layout.
         
-        The `layout_cells` table contains the blocks that have been added to each cell of a layout (stored as a JSON string).
-        Each "cell" has a unique 'name' attribute that is used to position it within the template using the global "parse_block()" function.
+        The "cells" attribute in the `layouts` table contains a JSON string of the blocks that make up each cell in the layout.
+        Each "cell" has a unique name that is used to position it within the template using the global "parse_cell()" function.
         
-        Most blocks will have a format like '[blocks:6]'. This tells the "controller->parse_page_layout()" method to load the
-        "blocks" controller (then call the "get_block()" method) and pass "6" as the argument and replace '[blocks:6]' with
-        whatever gets returned.
+        The "get_layout_cells()" method below was part of an idea to seperate out the "cells" data into their own tables. But then I was
+        still storing the individual block data as a JSON string to and it seemed silly to make it its own table when all I was doing
+        was grabbing it all and combining it into an array. Seperating everything out into their own tables is only worthwhile if I
+        intend to change the naming conventions used for the blocks associative arrays or need to do some queries where I find the
+        number of instances a particular block is being used.
+        Otherwise, it'll all end up as an array anyway, so why not just store it that way.
     */
     
     // get the layout
@@ -46,6 +48,7 @@ class layouts_model extends model
     }
     
     
+    /*
     // get the layout cells
     public function get_layout_cells( $layout_id = 0 )
     {
@@ -70,27 +73,7 @@ class layouts_model extends model
         
         return $arr;
     }
-    
-    
-    // get the layout from the id
-    public function get_layout_from_id( $id = 0 )
-    {
-        $arr = array();
-        
-        if ( ! is_numeric($id))
-            return $arr;
-        
-        try
-        {     
-            $stmt = $this->db->prepare("SELECT * FROM layouts WHERE id = :id LIMIT 1");
-            $stmt->execute( array(':id'=>$id) );
-            if ($stmt->rowCount())
-                $arr = $stmt->fetch();
-        }
-        catch(PDOException $e) { }
-        
-        return $arr;
-    }
+    */
     
     
     // get unique controller types

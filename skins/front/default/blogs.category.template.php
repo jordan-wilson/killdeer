@@ -1,5 +1,3 @@
-    
-    <?php /*echo printr(get_defined_vars());*/ ?> 
 
     <div class="row">
         
@@ -8,9 +6,12 @@
             <?= parse_cell('append_content'); ?>
             
             <?php if ( count($category) ) : ?>
+            
                 <div class="blogs_category">
                     <?= $category['content']; ?>
+                    <?= debuggery('content'); ?>
                 </div>
+                
             <?php endif; ?>
             
             <?php if ( count($blogs) ) : ?>
@@ -33,7 +34,7 @@
                             </div>
                             
                             <div class="blogs_post_link">
-                                <a href="/<?= $registry->modules['blogs'] . '/' . $blog['url']; ?>">read more</a>
+                                <a href="<?= $registry->modules['blogs'] . '/' . $blog['url']; ?>">read more</a>
                             </div>
                         </div>
                         
@@ -67,11 +68,11 @@
         </div>
         
         <div class="span3">
-            <?= parse_block('[blogs:subscribe]'); ?>
-            <?= parse_block('[blogs:categories]'); ?>
+            <?= parse_block( array('controller'=>'blogs', 'view'=>'subscribe') ); ?>
+            <?= parse_block( array('controller'=>'blogs', 'view'=>'categories') ); ?>
             <?= parse_cell('right_column_blog_category_callouts'); ?>
             <?= parse_cell('right_column_callouts'); ?>
-            <?= parse_block('[blogs:recent]'); ?>
+            <?= parse_block( array('controller'=>'blogs', 'view'=>'recent2') ); ?>
         </div>
         
     </div>

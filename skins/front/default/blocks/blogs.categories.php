@@ -6,7 +6,7 @@
             <ul>
                 <?php foreach( $categories as $category ) : ?>
                     <li>
-                        <a href="/<?= $registry->modules['blogs'] . '/' . 'category/' . $category['url']; ?>">
+                        <a href="<?= $registry->modules['blogs'] . '/' . 'category/' . $category['url']; ?>">
                             <?= $category['name']; ?>
                         </a>
                     </li>
